@@ -356,7 +356,10 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .card:not(.rev):not(.locked):hover .front{border-color:var(--ink);box-shadow:0 5px 0 var(--ink);transform:translateY(-3px)}
 .front{transition:transform .2s var(--ease),box-shadow .2s,border-color .2s}
 .w{font-family:var(--word);font-weight:800;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;line-height:1;padding:0 6%;margin-top:-4%;
-   font-size:min(20cqi,calc(138cqi / max(var(--len,6),5)))}
+   font-size:min(20cqi,calc(128cqi / max(var(--len,6),5)))}
+.two .w,.two .w2{white-space:pre;text-align:center;line-height:1.02}
+.card.two .w{font-size:min(15cqi,calc(128cqi / max(var(--len,6),5)))}
+.hy.two .w,.kgrid.hy .k.two .w{font-size:min(13cqi,calc(112cqi / max(var(--len,6),5)))}
 .hy .w{font-family:var(--hy);font-weight:700;text-transform:none;letter-spacing:0;font-size:min(16cqi,calc(122cqi / max(var(--len,6),5)))}
 .back{transform:rotateY(180deg);color:#fff;grid-template-rows:1fr auto;padding:8% 0 9%}
 .back svg{height:42cqi;aspect-ratio:44/84;width:auto;align-self:end;overflow:visible}
@@ -2880,30 +2883,66 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ================= WORDS: [English, Western Armenian] ================= */
 const WORDS = [
-["Apple","Խնձոր"],["Moon","Լուսին"],["Sun","Արեւ"],["Star","Աստղ"],["River","Գետ"],["Mountain","Լեռ"],["Bridge","Կամուրջ"],
-["Key","Բանալի"],["Door","Դուռ"],["Window","Պատուհան"],["Clock","Ժամացոյց"],["Mirror","Հայելի"],["Book","Գիրք"],["Pen","Գրիչ"],
-["Letter","Նամակ"],["Ship","Նաւ"],["Train","Շոգեկառք"],["Plane","Օդանաւ"],["Car","Ինքնաշարժ"],["Wheel","Անիւ"],["Ring","Մատանի"],
-["Crown","Թագ"],["King","Թագաւոր"],["Queen","Թագուհի"],["Ghost","Ուրուական"],["Dragon","Վիշապ"],["Lion","Առիւծ"],["Eagle","Արծիւ"],
-["Snake","Օձ"],["Fish","Ձուկ"],["Cat","Կատու"],["Dog","Շուն"],["Horse","Ձի"],["Bear","Արջ"],["Fox","Աղուէս"],["Owl","Բու"],
-["Bee","Մեղու"],["Spider","Սարդ"],["Egg","Հաւկիթ"],["Bread","Հաց"],["Salt","Աղ"],["Honey","Մեղր"],["Cheese","Պանիր"],
-["Coffee","Սուրճ"],["Tea","Թէյ"],["Milk","Կաթ"],["Ice","Սառոյց"],["Snow","Ձիւն"],["Rain","Անձրեւ"],["Wind","Հով"],["Fire","Կրակ"],
-["Smoke","Ծուխ"],["Stone","Քար"],["Gold","Ոսկի"],["Glass","Ապակի"],["Paper","Թուղթ"],["Ball","Գնդակ"],["Drum","Թմբուկ"],
-["Song","Երգ"],["Dance","Պար"],["Film","Ֆիլմ"],["Phone","Հեռաձայն"],["Computer","Համակարգիչ"],["Robot","Ռոպոտ"],["Rocket","Հրթիռ"],
-["Space","Տիեզերք"],["Planet","Մոլորակ"],["Doctor","Բժիշկ"],["Teacher","Ուսուցիչ"],["Spy","Լրտես"],["Thief","Գող"],["Police","Ոստիկան"],
-["Judge","Դատաւոր"],["Soldier","Զինուոր"],["Pirate","Ծովահէն"],["Chef","Խոհարար"],["School","Դպրոց"],["Hospital","Հիւանդանոց"],
-["Bank","Դրամատուն"],["Market","Շուկայ"],["Castle","Դղեակ"],["Tower","Աշտարակ"],["Wall","Պատ"],["Garden","Պարտէզ"],["Tree","Ծառ"],
-["Flower","Ծաղիկ"],["Rose","Վարդ"],["Grape","Խաղող"],["Olive","Ձիթապտուղ"],["Hat","Գլխարկ"],["Shoe","Կօշիկ"],["Glove","Ձեռնոց"],
-["Belt","Գօտի"],["Bag","Պայուսակ"],["Umbrella","Անձրեւանոց"],["Candle","Մոմ"],["Lamp","Լամբար"],["Bell","Զանգ"],["Heart","Սիրտ"],
-["Eye","Աչք"],["Hand","Ձեռք"],["Tooth","Ակռայ"],["Shadow","Շուք"],["Dream","Երազ"],["Secret","Գաղտնիք"],["Night","Գիշեր"],
-["Winter","Ձմեռ"],["Summer","Ամառ"],["Sea","Ծով"],["Island","Կղզի"],["Desert","Անապատ"],["Cave","Քարայր"],["Map","Քարտէզ"],
-["Tent","Վրան"],["Compass","Կողմնացոյց"],["Rope","Չուան"],["Knot","Հանգոյց"],["Whistle","Սուլիչ"],["Camp","Բանակում"],
-["Campfire","Խարոյկ"],["Flag","Դրօշ"],["Uniform","Համազգեստ"],["Knife","Դանակ"],["Flashlight","Լապտեր"],["Backpack","Ուսապարկ"],
-["Hike","Արշաւ"],["Scoutmaster","Խմբապետ"],["Oath","Երդում"],["Trail","Արահետ"],
-["Ararat","Արարատ"],["Apricot","Ծիրան"],["Pomegranate","Նուռ"],["Lavash","Լաւաշ"],["Duduk","Տուտուկ"],["Khachkar","Խաչքար"],
-["Alphabet","Այբուբեն"],["Yerevan","Երեւան"],["Sevan","Սեւան"],["Manti","Մանթի"],["Basturma","Պաստըրմա"],["Homenetmen","ՀՄԸՄ"],
-["Jerusalem","Երուսաղէմ"],["Old City","Հին Քաղաք"],["St. James","Սուրբ Յակոբ"],["Patriarchate","Պատրիարքարան"],
-["Jaffa Gate","Յաֆայի Դուռ"],["Zion Gate","Սիոնի Դուռ"],["Monastery","Վանք"],["Bell Tower","Զանգակատուն"],["Quarter","Թաղ"],["Church","Եկեղեցի"]
+["Tongue", "Լեզու"],["Face", "Երես"],["Palm", "Ափ"],["Finger", "Մատ"],["Forehead", "Ճակատ"],["Head", "Գլուխ"],
+["Arm", "Թեւ"],["Heart", "Սիրտ"],["Eye", "Աչք"],["Mouth", "Բերան"],["Tooth", "Ակռայ"],["Knee", "Ծունկ"],
+["Back", "Մէջք"],["Bone", "Ոսկոր"],["Hair", "Մազ"],["Fingernail", "Եղունգ"],["Soul", "Հոգի"],["Wolf", "Գայլ"],
+["Bear", "Արջ"],["Fox", "Աղուէս"],["Donkey", "Էշ"],["Camel", "Ուղտ"],["Rooster", "Աքաղաղ"],["Owl", "Բու"],
+["Scorpion", "Կարիճ"],["Lion", "Առիւծ"],["Fish", "Ձուկ"],["Spider", "Սարդ"],["Ant", "Մրջիւն"],["Bee", "Մեղու"],
+["Fly", "Ճանճ"],["Butterfly", "Թիթեռնիկ"],["Monkey", "Կապիկ"],["Tiger", "Վագր"],["Dove", "Աղաւնի"],["Eagle", "Արծիւ"],
+["Snake", "Օձ"],["Mouse", "Մուկ"],["Tail", "Պոչ"],["Paw", "Թաթ"],["Beak", "Կտուց"],["Feather", "Փետուր"],
+["Nest", "Բոյն"],["Horse", "Ձի"],["Elephant", "Փիղ"],["Soldier", "Զինուոր"],["Queen", "Թագուհի"],["King", "Թագաւոր"],
+["Boat", "Նաւակ"],["Paper", "Թուղթ"],["Ball", "Գնդակ"],["Treasure", "Գանձ"],["Shield", "Վահան"],["Sword", "Սուր"],
+["Bow", "Աղեղ"],["Arrow", "Նետ"],["Fortress", "Բերդ"],["Tower", "Աշտարակ"],["Palace", "Պալատ"],["Crown", "Թագ"],
+["Seal", "Կնիք"],["General", "Զօրավար"],["Emperor", "Կայսր"],["Prince", "Իշխան"],["Violin", "Ջութակ"],["Duduk", "Տուտուկ"],
+["Zurna", "Զուռնա"],["Drum", "Թմբուկ"],["Note", "Նոտա"],["Clap", "Ծափ"],["Stage", "Բեմ"],["Curtain", "Վարագոյր"],
+["Mask", "Դիմակ"],["Statue", "Արձան"],["Picture", "Նկար"],["Ribbon", "Ժապաւէն"],["Wave", "Ալիք"],["Dance", "Պար"],
+["Song", "Երգ"],["House", "Տուն"],["Voice", "Ձայն"],["Hour", "Ժամ"],["Table", "Սեղան"],["Cross", "Խաչ"],
+["Candle", "Մոմ"],["Bell", "Զանգ"],["Monastery", "Վանք"],["Shepherd", "Հովիւ"],["Priest", "Քահանայ"],["Dome", "Գմբէթ"],
+["Ararat", "Արարատ"],["Masis", "Մասիս"],["Sevan", "Սեւան"],["Aragats", "Արագած"],["Yerevan", "Երեւան"],["Dragon", "Վիշապ"],
+["Khachkar", "Խաչքար"],["Alphabet", "Այբուբեն"],["Letter", "Տառ"],["Homenetmen", "ՀՄԸՄ"],["Jerusalem", "Երուսաղէմ"],["Old City", "Հին Քաղաք"],
+["St. James", "Սուրբ Յակոբ"],["Patriarchate", "Պատրիարքարան"],["Zion Gate", "Սիոնի Դարպաս"],["Bell Tower", "Զանգակատուն"],["Quarter", "Թաղ"],["City Wall", "Պարիսպ"],
+["Olive Tree", "Ձիթենի"],["Apricot", "Ծիրան"],["Pomegranate", "Նուռ"],["Lavash", "Լաւաշ"],["Manti", "Մանթը"],["Basturma", "Պաստըրմա"],
+["Harissa", "Հարիսա"],["Dolma", "Տոլմա"],["Lahmajun", "Լահմաջուն"],["Olive", "Ձիթապտուղ"],["Bread", "Հաց"],["Salt", "Աղ"],
+["Honey", "Մեղր"],["Cheese", "Պանիր"],["Egg", "Հաւկիթ"],["Fig", "Թուզ"],["Walnut", "Ընկոյզ"],["Pepper", "Պղպեղ"],
+["Onion", "Սոխ"],["Grape", "Խաղող"],["Watermelon", "Ձմերուկ"],["Coffee", "Սուրճ"],["Tea", "Թէյ"],["Milk", "Կաթ"],
+["Dough", "Խմոր"],["Barbecue", "Խորոված"],["Tent", "Վրան"],["Compass", "Կողմնացոյց"],["Rope", "Չուան"],["Knot", "Հանգոյց"],
+["Whistle", "Սուլիչ"],["Campfire", "Խարոյկ"],["Hike", "Արշաւ"],["Scoutmaster", "Խմբապետ"],["Oath", "Երդում"],["Track", "Հետք"],
+["Backpack", "Ուսապարկ"],["Uniform", "Տարազ"],["Flag", "Դրօշ"],["Army", "Բանակ"],["Group", "Խումբ"],["Map", "Քարտէզ"],
+["Spark", "Կայծ"],["Ash", "Մոխիր"],["Source", "Աղբիւր"],["Spring", "Գարուն"],["Peak", "Գագաթ"],["Volcano", "Հրաբուխ"],
+["Cave", "Քարայր"],["Waterfall", "Ջրվէժ"],["Lake", "Լիճ"],["Island", "Կղզի"],["Desert", "Անապատ"],["Sea", "Ծով"],
+["River", "Գետ"],["Mountain", "Լեռ"],["Root", "Արմատ"],["Branch", "Ճիւղ"],["Leaf", "Տերեւ"],["Tree", "Ծառ"],
+["Rainbow", "Ծիածան"],["Cloud", "Ամպ"],["Lightning", "Կայծակ"],["Storm", "Փոթորիկ"],["Fog", "Մշուշ"],["Hail", "Կարկուտ"],
+["Snow", "Ձիւն"],["Ice", "Սառոյց"],["Fire", "Կրակ"],["Smoke", "Ծուխ"],["Shadow", "Շուք"],["Light", "Լոյս"],
+["Moon", "Լուսին"],["Sun", "Արեւ"],["Star", "Աստղ"],["Planet", "Մոլորակ"],["Ray", "Ճառագայթ"],["Night", "Գիշեր"],
+["Dream", "Երազ"],["Giant", "Հսկայ"],["Gold", "Ոսկի"],["Silver", "Արծաթ"],["Iron", "Երկաթ"],["Key", "Բանալի"],
+["Door", "Դուռ"],["Window", "Պատուհան"],["Mirror", "Հայելի"],["Clock", "Ժամացոյց"],["Glasses", "Ակնոց"],["Hat", "Գլխարկ"],
+["Belt", "Գօտի"],["Ring", "Մատանի"],["Chain", "Շղթայ"],["Money", "Դրամ"],["Ticket", "Տոմս"],["Newspaper", "Թերթ"],
+["Book", "Գիրք"],["Mail", "Նամակ"],["Net", "Ցանց"],["Button", "Կոճակ"],["Needle", "Ասեղ"],["Thread", "Թել"],
+["Hammer", "Մուրճ"],["Saw", "Սղոց"],["Match", "Լուցկի"],["Fork", "Պատառաքաղ"],["Plate", "Ափսէ"],["Bottle", "Շիշ"],
+["Wheel", "Անիւ"],["Sail", "Առագաստ"],["Anchor", "Խարիսխ"],["Lighthouse", "Փարոս"],["Bridge", "Կամուրջ"],["Ladder", "Սանդուխ"],
+["Sled", "Սահնակ"],["Bicycle", "Հեծանիւ"],["Ship", "Նաւ"],["Phone", "Հեռաձայն"],["Computer", "Համակարգիչ"],["Rocket", "Հրթիռ"],
+["Arch", "Կամար"],["Pillar", "Սիւն"],["Station", "Կայան"],["Market", "Շուկայ"],["Bank", "Դրամատուն"],["School", "Դպրոց"],
+["Museum", "Թանգարան"],["Hospital", "Հիւանդանոց"],["Point", "Կէտ"],["Corner", "Անկիւն"],["Circle", "Շրջան"],["Line", "Գիծ"],
+["Number", "Թիւ"],["Bill", "Հաշիւ"],["History", "Պատմութիւն"],["Link", "Կապ"],["Plan", "Ծրագիր"],["Password", "Գաղտնաբառ"],
+["Secret", "Գաղտնիք"],["Lesson", "Դաս"],["Exam", "Քննութիւն"],["Spy", "Լրտես"],["Thief", "Գող"],["Judge", "Դատաւոր"],
+["Doctor", "Բժիշկ"],["Master", "Վարպետ"],["Pirate", "Ծովահէն"],["Gyumri", "Գիւմրի"],["Vanadzor", "Վանաձոր"],["Etchmiadzin", "Էջմիածին"],
+["Dilijan", "Դիլիջան"],["Jermuk", "Ջերմուկ"],["Goris", "Գորիս"],["Kapan", "Կապան"],["Garni", "Գառնի"],["Geghard", "Գեղարդ"],
+["Khor Virap", "Խոր Վիրապ"],["Tatev", "Տաթեւ"],["Noravank", "Նորավանք"],["Tsaghkadzor", "Ծաղկաձոր"],["Hrazdan", "Հրազդան"],["Syunik", "Սիւնիք"],
+["Shirak", "Շիրակ"],["Lori", "Լոռի"],["Sardarapat", "Սարդարապատ"],["Ara", "Արա"],["Araks", "Արաքս"],["Van", "Վան"],
+["Ani", "Անի"],["Kars", "Կարս"],["Karin", "Կարին"],["Mush", "Մուշ"],["Sasun", "Սասուն"],["Baghesh", "Բաղէշ"],
+["Kharpert", "Խարբերդ"],["Tigranakert", "Տիգրանակերտ"],["Akhtamar", "Աղթամար"],["Cilicia", "Կիլիկիա"],["Sis", "Սիս"],["Adana", "Ատանա"],
+["Marash", "Մարաշ"],["Aintab", "Այնթապ"],["Zeytun", "Զէյթուն"],["Musa Dagh", "Մուսա Լեռ"],["Sipan", "Սիփան"],["Nemrut", "Նեմրութ"],
+["Euphrates", "Եփրատ"],["Tigris", "Տիգրիս"],["Artsakh", "Արցախ"],["Stepanakert", "Ստեփանակերտ"],["Shushi", "Շուշի"],["Gandzasar", "Գանձասար"],
+["Dadivank", "Դադիվանք"],["Amaras", "Ամարաս"],["Martakert", "Մարտակերտ"],["Hadrut", "Հադրութ"],["Mrav", "Մռաւ"],["Tatik-Papik", "Տատիկ-Պապիկ"],
+["Hayk", "Հայկ"],["Shamiram", "Շամիրամ"],["Tigran the Great", "Տիգրան Մեծ"],["Artashes", "Արտաշէս"],["Trdat", "Տրդատ"],["Levon", "Լեւոն"],
+["Vartan", "Վարդան"],["Avarayr", "Աւարայր"],["Illuminator", "Լուսաւորիչ"],["Mashtots", "Մաշտոց"],["Khorenatsi", "Խորենացի"],["Narekatsi", "Նարեկացի"],
+["Shnorhali", "Շնորհալի"],["Khrimian Hayrik", "Խրիմեան Հայրիկ"],["David of Sasun", "Սասունցի Դաւիթ"],["Andranik", "Անդրանիկ"],["Nzhdeh", "Նժդեհ"],["Aram Manukian", "Արամ Մանուկեան"],
+["Tehlirian", "Թեհլիրեան"],["Monte", "Մոնթէ"],["Komitas", "Կոմիտաս"],["Tumanyan", "Թումանեան"],["Charents", "Չարենց"],["Sevak", "Սեւակ"],
+["Siamanto", "Սիամանթօ"],["Aivazovsky", "Այվազովսկի"],["Saryan", "Սարեան"],["Aznavour", "Ազնաւուր"],["Saroyan", "Սարոյեան"],["Hagopian", "Յակոբեան"],
+["Krissian", "Քրիսեան"]
 ];
+/* pairs that never share a board: one clue would hit both equally */
+const APART = [["Ararat","Masis"],["Olive","Olive Tree"],["Bell","Bell Tower"],["Sasun","David of Sasun"],["Ship","Boat"],["Letter","Mail"]];
 
 /* ================= TEXT ================= */
 const T = {
@@ -3005,7 +3044,14 @@ function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a
 function shuffle(arr,rng){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function deal(code){
   const rng = mulberry32((parseInt(code,10)*2654435761 % 4294967296) + 17);
-  const picks = shuffle(WORDS.map((_,i)=>i), rng).slice(0,25);
+  const partner = {}; APART.forEach(([x,y]) => { partner[x] = y; partner[y] = x; });
+  const picks = [], taken = new Set();
+  for(const i of shuffle(WORDS.map((_,i)=>i), rng)){
+    const en = WORDS[i][0];
+    if(partner[en] && taken.has(partner[en])) continue;
+    picks.push(i); taken.add(en);
+    if(picks.length === 25) break;
+  }
   const first = rng() < .5 ? 'r' : 'b', second = first === 'r' ? 'b' : 'r';
   const key = shuffle([...Array(9).fill(first), ...Array(8).fill(second), ...Array(7).fill('n'), 'a'], rng);
   return { words: picks, key, first };
@@ -3457,12 +3503,26 @@ function buildBoard(){
   renderGame(true);
   if(G.over) setTimeout(openEnd, 300);
 }
+/* names longer than 9 letters with a space break onto two balanced lines */
+function twoLines(w){
+  if(w.length <= 9 || w.indexOf(' ') < 0) return null;
+  let best = null;
+  w.split('').forEach((c,i) => { if(c !== ' ') return; const m = Math.max(i, w.length - i - 1); if(!best || m < best.m) best = { m, text: w.slice(0,i) + '\n' + w.slice(i+1) }; });
+  return best;
+}
+function fitLen(el, w){
+  const t = twoLines(w);
+  el.classList.toggle('two', !!t);
+  el.style.setProperty('--len', t ? t.m : w.length);
+  if(t) el.querySelectorAll('.w,.w2').forEach(x => x.textContent = t.text);
+}
 function cardText(i){
   const el = board.children[i], w = word(i), r = G.rev[i];
   el.querySelector('.w').textContent = w; el.querySelector('.w2').textContent = w;
-  el.style.setProperty('--len', w.length);
+  fitLen(el, w);
   el.querySelector('use').setAttribute('href', G.key[i] === 'a' ? '#assassin' : G.key[i] === 'n' ? '#person' : '#agent');
   el.className = 'card ' + (lang === 'hy' ? 'hy ' : '') + (r || peekAll ? 'rev t-' + G.key[i] : '') + (G.over || r ? ' locked' : '');
+  fitLen(el, w);
   el.setAttribute('aria-label', w);
 }
 function renderGame(all){
@@ -3577,7 +3637,7 @@ function renderKey(){
   const live = Date.now() - liveAt < 12000;
   [...g.children].forEach((k,i) => {
     const w = word(i); k.className = 'k t-' + G.key[i] + ((live ? G.rev[i] : spyMarks[i]) ? ' done' : '');
-    k.firstChild.textContent = w; k.style.setProperty('--len', w.length);
+    k.firstChild.textContent = w; fitLen(k, w);
   });
   $('kCode').textContent = spyCode;
   const lv = $('kLive'); lv.classList.toggle('on', live); lv.lastChild.textContent = live ? L().live : L().offline;
