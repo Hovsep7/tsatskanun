@@ -3417,13 +3417,8 @@ document.addEventListener('keydown', e => {
 const ARTIFACT_URL = 'https://claude.ai/artifact/E8i28K6ADsJZ3iE9b3PpN9';
 /* Where the QR code sends phones: the page's own address when it is hosted (GitHub Pages or any site),
    otherwise the claude.ai link (opened from claude.ai, or as a local file on the laptop). */
-function phoneURL(){
-  try{
-    const onClaude = window.claude && typeof window.claude.use === 'function';
-    if(!onClaude && /^https?:$/.test(location.protocol)) return location.origin + location.pathname;
-  }catch(e){}
-  return ARTIFACT_URL;
-}
+const SITE_URL = 'https://hovsep7.github.io/tsatskanun/';
+function phoneURL(){ return SITE_URL; }
 function renderQR(){
   let ok = false;
   try{
