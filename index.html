@@ -3154,7 +3154,7 @@ const APART = [["Ararat","Masis"],["Olive","Olive Tree"],["Bell","Bell Tower"],[
 const T = {
  hy:{tagline:"Մէկ բառ։ Մէկ թիւ։ Մէկ մարդասպան։",how:"Ինչպէս կը խաղցուի",play:"Խաղալ",spykey:"Լրտեսապետի բանալին",skip:"Անցնիլ խաղին",
    back:"Ետ",next:"Յառաջ",letsgo:"Սկսինք",step:(i,n)=>`ՔԱՅԼ ${i} / ${n}`,
-   titles:["Երկու խումբ","Տախտակը","Քարտերը","Բանալին","Յուշումը","Գուշակել","Յաղթանակ"],
+   titles:["Երկու խումբ","Տախտակը","Քարտերը","Բանալին","Ակնարկը","Գուշակել","Յաղթանակ"],
    caps:["Բաժնուեցէք երկու խումբի՝ կարմիր եւ կապոյտ։ Իւրաքանչիւր խումբ կ՚ընտրէ մէկ լրտեսապետ։",
      "Տախտակին վրայ 25 բառ կայ։ Ամէն մէկը ծածկանուն մըն է։",
      "Ամէն ծածկանունի ետին չորս տեսակի քարտերէն մէկը պահուած է։ Սկսող խումբը 9 գործակալ ունի, միւսը՝ 8։",
@@ -3169,7 +3169,7 @@ const T = {
    spies:n=>n===0?"Լրտեսապետ դեռ միացած չէ":`${n} լրտեսապետ միացած է`,moved:c=>`Գլխաւոր պաստառը նոր խաղ սկսաւ (${c})։ Անցնիլ →`,join:c=>`Միանալ ${c} խաղին`,
    starts:(t,o)=>`${t}ը կը սկսի՝ 9 գործակալով։ ${o}ը ունի 8։`,start:"Սկսիլ",resume:"Շարունակել",newCode:"Նոր ծածկագիր",pickCode:"Խաղի թիւ",backTitle:"Գլխաւոր էջ",
    hard:"Դժուար խաղ",hardHint:"Թեմատիկ տախտակ · առանց յաւելեալ գուշակութեան · 90 վրկ. հերթ",hardU:"ԴԺՈՒԱՐ",timeUp:"Ժամանակը լրացաւ",
-   red:"Կարմիր",blue:"Կապոյտ",left:"մնացած գործակալ",turn:t=>`${t}ին հերթը`,clue:"Յուշում",endTurn:"Հերթը փոխանցել",undo:"Ետ առնել",
+   red:"Կարմիր",blue:"Կապոյտ",left:"մնացած գործակալ",turn:t=>`${t}ին հերթը`,clue:"Ակնարկ",endTurn:"Հերթը փոխանցել",undo:"Ետ առնել",
    newGame:"Նոր խաղ",sure:"Վստա՞հ ես",showClue:"Ցուցադրել",cancel:"Չեղարկել",cluePh:"Բառը",
    wins:t=>`${t}ը յաղթեց`,assassinSub:t=>`${t}ը մարդասպանին դպաւ։`,foundSub:"Բոլոր գործակալները գտնուեցան։",seeBoard:"Տախտակը տեսնել",
    spyIntro:"Գրէ՛ գլխաւոր պաստառին վրայի ծածկագիրը։",open:"Բանալ",bad:"Չորս թիւ գրէ՛",
@@ -4057,7 +4057,7 @@ function renderKey(){
     k.firstChild.textContent = w; fitLen(k, w); setEn(k, i);
   });
   $('kCode').textContent = spyCode;
-  const lv = $('kLive'); lv.classList.toggle('on', live); lv.lastChild.textContent = live ? L().live : L().offline;
+  const lv = $('kLive'); lv.classList.toggle('on', live); lv.hidden = !live; lv.lastChild.textContent = live ? L().live : '';
   const rl = G.key.filter((k,i) => k === 'r' && !(live ? G.rev[i] : spyMarks[i])).length, bl = G.key.filter((k,i) => k === 'b' && !(live ? G.rev[i] : spyMarks[i])).length;
   $('kR').textContent = rl; $('kB').textContent = bl;
   $('kTurn').textContent = live ? (G.over ? L().wins(tname(G.over.w)) : L().turn(tname(G.turn))) : '';
