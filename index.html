@@ -490,12 +490,9 @@ html.magicon, html.magicon *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http:/
 .tally.blue .figs{justify-content:flex-end}
 .figs svg{height:100%;aspect-ratio:44/84;overflow:visible;transform-origin:50% 100%;transition:opacity .4s}
 .tally.red .figs svg{color:var(--red)}.tally.blue .figs svg{color:var(--blue)}
-.figs svg.down{transform:rotate(-82deg) translateX(-10%);opacity:.28}
-.tally.blue .figs svg.down{transform:rotate(82deg) translateX(10%)}
-.figs svg.fall{animation:figfall .7s cubic-bezier(.5,0,.75,.2) both}
-.tally.blue .figs svg.fall{animation-name:figfallb}
-@keyframes figfall{0%{transform:none;opacity:1}40%{transform:translateY(-18%) rotate(8deg)}100%{transform:rotate(-82deg) translateX(-10%);opacity:.28}}
-@keyframes figfallb{0%{transform:none;opacity:1}40%{transform:translateY(-18%) rotate(-8deg)}100%{transform:rotate(82deg) translateX(10%);opacity:.28}}
+.figs svg.down{display:none}
+.figs svg.fall{animation:figpop .5s cubic-bezier(.3,1.4,.6,1) forwards}
+@keyframes figpop{0%{transform:none;opacity:1}35%{transform:translateY(-25%) scale(1.35);opacity:1}100%{transform:scale(0);opacity:0}}
 /* ---------- card tilt ---------- */
 .card{transition:transform .25s ease-out}
 .card.tilt{transition:transform .08s linear}
@@ -3793,7 +3790,7 @@ function drawFigs(t){
   figs.forEach((f,k) => {
     const isDown = k >= total - found, newly = isDown && prev >= 0 && k < total - prev;
     f.classList.toggle('down', isDown && !newly);
-    if(newly){ f.classList.remove('fall'); void f.getBBox(); f.classList.add('fall'); }
+    if(newly){ f.classList.remove('fall'); void f.getBBox(); f.classList.add('fall'); setTimeout(() => { if(f.classList.contains('fall')){ f.classList.remove('fall'); f.classList.add('down'); } }, 520); }
     else f.classList.remove('fall');
   });
   figState[t] = found;
