@@ -459,6 +459,30 @@ html.magicon, html.magicon *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http:/
 .handle::before{content:"";position:absolute;left:-6%;top:-12%;bottom:-12%;width:22%;border-radius:6px;background:#3a3935}
 #magBtn.on{color:var(--paper);background:var(--ink);border-color:var(--ink)}
 
+/* ---------- lobby layout: join on the left, team setup on the right ---------- */
+#lobby{overflow-y:auto;justify-content:flex-start}
+.lobby-wrap{margin:auto;width:min(1180px,100%);display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(24px,4vw,64px);align-items:center;padding-block:clamp(60px,9vh,96px) 28px}
+.join{display:flex;align-items:center;justify-content:center;gap:clamp(18px,3vw,40px);min-width:0}
+.join .qrbox{width:clamp(150px,min(22vw,36vh),300px);flex:none}
+.join-txt{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:clamp(8px,1.6vh,16px);min-width:0}
+#lobby .bigcode{font-size:clamp(64px,min(10vw,18vh),200px);margin-right:0}
+#lobby .lobby-instr{max-width:28ch;font-size:clamp(18px,1.55vw,24px);line-height:1.25}
+.host{display:flex;flex-direction:column;gap:14px;padding:clamp(18px,2.2vw,28px);border:2px solid var(--line);border-radius:20px;background:var(--card);min-width:0}
+.host .tname{width:100%;background:var(--paper)}
+.host .tname input{width:100%;max-width:none;min-width:0}
+.host .hardsw{text-align:left;padding-block:4px}
+.host .hardsw .sw{flex:none}
+.host .starts{font-size:clamp(17px,1.4vw,21px);color:var(--soft);text-align:left;align-items:flex-start;line-height:1.25}
+.host .starts .chip{margin-top:3px;flex:none}
+#lStart{width:100%;font-size:clamp(24px,2.2vw,32px);padding:.5em 1em}
+.host-links{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media (max-width:900px){
+  .lobby-wrap{grid-template-columns:1fr;gap:18px;padding-block:68px 20px;max-width:560px}
+  .join .qrbox{width:clamp(110px,30vw,170px)}
+  #lobby .bigcode{font-size:clamp(56px,17vw,104px)}
+  #lobby .lobby-instr{font-size:16px}
+}
+
 /* ---------- end ---------- */
 .end{position:fixed;inset:0;z-index:25;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3vh,30px);color:#fff;text-align:center;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));clip-path:circle(0% at 50% 50%);transition:clip-path .9s var(--ease)}
@@ -586,23 +610,23 @@ html.magicon, html.magicon *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http:/
 
 <!-- ============ LOBBY ============ -->
 <section class="screen" id="lobby" hidden>
-  <div class="lobby-row">
-    <div class="qrbox" id="qrBox" hidden><div id="qr" style="width:100%;height:100%"></div></div>
-    <div class="lobby-side">
-      <div class="bigcode slit" id="lCode">0000</div>
-      <p class="lobby-instr t" id="lInstr"></p>
-      <div class="spies" id="lSpies" hidden><i></i><span></span></div>
+  <div class="lobby-wrap">
+    <div class="join">
+      <div class="qrbox" id="qrBox" hidden><div id="qr" style="width:100%;height:100%"></div></div>
+      <div class="join-txt">
+        <div class="bigcode slit" id="lCode">0000</div>
+        <p class="lobby-instr t" id="lInstr"></p>
+        <div class="spies" id="lSpies" hidden><i></i><span></span></div>
+      </div>
     </div>
-  </div>
-  <div class="setup">
-    <label class="tname red"><i></i><input id="nameR" maxlength="16" autocomplete="off" aria-label="Red team name"></label>
-    <label class="tname blue"><i></i><input id="nameB" maxlength="16" autocomplete="off" aria-label="Blue team name"></label>
-    <div class="hardsw" id="hardSw" role="switch" aria-checked="false" tabindex="0"><span class="sw"></span><span><span class="t" data-t="hard"></span><small class="t" data-t="hardHint"></small></span></div>
-  </div>
-  <div class="starts t" id="lStarts"></div>
-  <div class="title-actions">
-    <div class="row"><button class="btn main t" id="lStart"></button><button class="btn t" id="lNew" data-t="newCode"></button></div>
-    <button class="link t" id="lHome" data-t="backTitle"></button>
+    <div class="host">
+      <label class="tname red"><i></i><input id="nameR" maxlength="16" autocomplete="off" aria-label="Red team name"></label>
+      <label class="tname blue"><i></i><input id="nameB" maxlength="16" autocomplete="off" aria-label="Blue team name"></label>
+      <div class="hardsw" id="hardSw" role="switch" aria-checked="false" tabindex="0"><span class="sw"></span><span><span class="t" data-t="hard"></span><small class="t" data-t="hardHint"></small></span></div>
+      <div class="starts t" id="lStarts"></div>
+      <button class="btn main t" id="lStart"></button>
+      <div class="host-links"><button class="link t" id="lNew" data-t="newCode"></button><button class="link t" id="lHome" data-t="backTitle"></button></div>
+    </div>
   </div>
 </section>
 
