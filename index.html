@@ -524,7 +524,10 @@ html.magicon, html.magicon *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http:/
 .l2b i{position:absolute;left:0;top:0;border-radius:10%;background:var(--card);border:2px solid var(--ink);box-shadow:3px 4px 0 var(--ink);display:grid;place-items:center;font:400 1px var(--bebas);color:var(--ink);font-style:normal}
 .l2b i.a{background:var(--night)}
 .l2b i.a svg{height:70%;aspect-ratio:44/84;color:var(--red)}
-.l2b.fade{transition:opacity .45s ease;opacity:0}
+.l2b.fade{transition:opacity .35s ease;opacity:0}
+.l2b i b{font-weight:400;line-height:1;margin-top:-.08em}
+.card.flipin{animation:flipin .5s cubic-bezier(.3,1.2,.5,1) backwards;animation-delay:var(--fd,0ms)}
+@keyframes flipin{0%{transform:perspective(700px) rotateX(-90deg)}100%{transform:none}}
 
 /* ---------- end ---------- */
 .end{position:fixed;inset:0;z-index:25;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3vh,30px);color:#fff;text-align:center;
@@ -3423,36 +3426,53 @@ function playTitle(){
   }, done + 200));
 }
 $('goHow').onclick = () => show('how');
-$('goPlay').onclick = () => logoToBoard(() => { if(!G.code) load(newCode()); show('lobby'); });
-/* the ten letter cards of the logo slide into a 5x5 board, fifteen more are dealt around them, then the lobby takes over */
-let l2bBusy = false;
-function logoToBoard(done){
-  if(reduce || l2bBusy || cur !== 'title'){ done(); return; }
-  l2bBusy = true;
-  const from = tiles.map(t => t.getBoundingClientRect());
-  const S = Math.min(innerWidth * .1, innerHeight * .13), G2 = S * .14, W5 = 5*S + 4*G2;
-  const x0 = (innerWidth - W5) / 2, y0 = (innerHeight - W5) / 2;
-  const layer = document.createElement('div'); layer.className = 'l2b'; document.body.appendChild(layer);
-  mark.style.visibility = 'hidden';
-  for(let k=0;k<25;k++){
-    const el = document.createElement('i'), tx = x0 + (k%5)*(S+G2), ty = y0 + Math.floor(k/5)*(S+G2);
-    el.style.width = el.style.height = S + 'px'; el.style.transform = `translate(${tx}px,${ty}px)`;
-    const li = k - 5, src = li >= 0 && li < 10 ? tiles[li] : null;
-    if(src && !src.dataset.ch){ el.className = 'a'; el.innerHTML = '<svg viewBox="-22 -84 44 84"><use href="#assassin" x="-22" y="-84" width="44" height="84"/></svg>'; }
-    else if(src){ el.textContent = src.dataset.ch; el.style.fontSize = (S * .8) + 'px'; }
-    layer.appendChild(el);
-    if(src){
-      const f = from[li], sc = f.width / S;
-      el.animate([{ transform:`translate(${f.left}px,${f.top}px) scale(${sc},${f.height/S})` }, { transform:`translate(${tx}px,${ty}px)` }],
-        { duration:650, delay:li*25, easing:'cubic-bezier(.5,0,.2,1)', fill:'backwards' });
-    } else {
-      el.animate([{ transform:`translate(${innerWidth/2 - S/2}px,${innerHeight + S}px) rotate(-20deg)`, opacity:0 }, { transform:`translate(${tx}px,${ty}px)`, opacity:1 }],
-        { duration:520, delay:420 + k*28, easing:'cubic-bezier(.2,1.2,.4,1)', fill:'backwards' });
-    }
-  }
-  Snd.swish(); [0,1,2,3,4,5].forEach(n => setTimeout(() => Snd.tick(), 450 + n*110));
-  setTimeout(() => { done(); layer.classList.add('fade'); }, 1350);
-  setTimeout(() => { layer.remove(); mark.style.visibility = ''; l2bBusy = false; }, 1850);
+$('goPlay').onclick = () => { if(!G.code) load(newCode()); show('lobby'); };
+/* Start: the logo's ten cards appear, slide into the middle rows of the real board,
+   fifteen more are dealt around them, and every card turns over to show its word */
+let l2bBusy = false, l2bOn = false;
+function startGame(){
+  const fresh = !G.rev.some(Boolean) && !G.over;
+  if(reduce || l2bBusy || !fresh){ show('game'); return; }
+  l2bBusy = true; l2bOn = true;
+  show('game');
+  board.style.visibility = 'hidden';
+  requestAnimationFrame(() => {
+    const to = [...board.children].map(c => c.getBoundingClientRect());
+    const S = Math.min(innerWidth * .1, innerHeight * .15), G2 = S * .12, W5 = 5*S + 4*G2;
+    const lx = (innerWidth - W5) / 2, ly = innerHeight / 2 - S - G2 / 2;
+    const layer = document.createElement('div'); layer.className = 'l2b'; document.body.appendChild(layer);
+    const LOGO = ['Ծ','Ա','Ծ','Կ',null,'Ա','Ն','Ո','Ւ','Ն'];
+    const els = to.map((r,k) => {
+      const el = document.createElement('i'), li = k - 5, logo = li >= 0 && li < 10;
+      Object.assign(el.style, { left:r.left + 'px', top:r.top + 'px', width:r.width + 'px', height:r.height + 'px' });
+      if(logo && LOGO[li] === null){ el.className = 'a'; el.innerHTML = '<svg viewBox="-22 -84 44 84"><use href="#assassin" x="-22" y="-84" width="44" height="84"/></svg>'; }
+      else if(logo){ el.innerHTML = '<b>' + LOGO[li] + '</b>'; el.style.fontSize = (S * .8) + 'px'; }
+      layer.appendChild(el);
+      if(logo){
+        const fx = lx + (li % 5) * (S + G2), fy = ly + Math.floor(li / 5) * (S + G2);
+        el.animate([
+          { left:fx + 'px', top:fy + 'px', width:S + 'px', height:S + 'px', offset:0 },
+          { left:fx + 'px', top:fy + 'px', width:S + 'px', height:S + 'px', offset:.4 },
+          { left:r.left + 'px', top:r.top + 'px', width:r.width + 'px', height:r.height + 'px' }
+        ], { duration:1300, delay:li * 30, easing:'cubic-bezier(.6,0,.2,1)', fill:'backwards' });
+        el.animate([{ transform:'scale(.6)', opacity:0 }, { transform:'none', opacity:1 }], { duration:350, delay:li * 40, easing:'cubic-bezier(.2,1.4,.4,1)', fill:'backwards' });
+      } else {
+        el.animate([{ transform:`translate(${innerWidth/2 - r.left - r.width/2}px,${innerHeight + 60 - r.top}px) rotate(${k % 2 ? 14 : -14}deg)`, opacity:0 }, { transform:'none', opacity:1 }],
+          { duration:520, delay:1150 + k * 35, easing:'cubic-bezier(.2,1.2,.4,1)', fill:'backwards' });
+      }
+      return el;
+    });
+    Snd.stamp(); setTimeout(() => Snd.swish(), 650);
+    [0,1,2,3,4,5,6].forEach(n => setTimeout(() => Snd.tick(), 1200 + n * 110));
+    // turn every card over to its word
+    setTimeout(() => {
+      board.style.visibility = '';
+      [...board.children].forEach((c,k) => { c.style.setProperty('--fd', (k % 5 + Math.floor(k / 5)) * 45 + 'ms'); c.classList.add('flipin'); });
+      layer.classList.add('fade'); Snd.flip();
+    }, 2200);
+    setTimeout(() => { layer.remove(); [...board.children].forEach(c => c.classList.remove('flipin')); l2bBusy = false; }, 3200);
+    setTimeout(() => { l2bOn = false; if(cur === 'game' && !G.over) sweep(G.turn); }, 2900);
+  });
 }
 $('goSpy').onclick = () => { spyCode = null; spyOpen = false; show('spy'); };
 
@@ -3726,7 +3746,7 @@ function renderLobby(){
   $('lStart').textContent = inProgress ? L().resume : L().start;
   broadcast();
 }
-$('lStart').onclick = () => show('game');
+$('lStart').onclick = startGame;
 $('lNew').onclick = () => { try{ localStorage.removeItem('ctz-g-'+G.code); }catch(e){} load(newCode()); renderLobby(); setHash(); Snd.stamp(); };
 $('lHome').onclick = () => show('title');
 ['r','b'].forEach(t => $(t === 'r' ? 'nameR' : 'nameB').addEventListener('input', e => {
@@ -3766,7 +3786,7 @@ function buildBoard(){
   peekAll = false; document.body.classList.remove('docked');
   renderGame(true);
   if(G.over) setTimeout(openEnd, 300);
-  else { startTimer(); if(!G.rev.some(Boolean)) setTimeout(() => sweep(G.turn), 650); }
+  else { startTimer(); if(!G.rev.some(Boolean)) setTimeout(() => { if(!l2bOn) sweep(G.turn); }, 650); }
 }
 /* names longer than 9 letters with a space break onto two balanced lines */
 function twoLines(w){
