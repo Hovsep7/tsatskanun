@@ -531,6 +531,24 @@ html.magicon, html.magicon *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http:/
 .card.flipin{animation:flipin .5s cubic-bezier(.3,1.2,.5,1) backwards;animation-delay:var(--fd,0ms)}
 @keyframes flipin{0%{transform:perspective(700px) rotateX(-90deg)}100%{transform:none}}
 
+/* ---------- bilingual cards ---------- */
+.we,.we2{display:none}
+.card.bi .front{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:2.5cqi;padding:0 5cqi}
+.card.bi .front::after{bottom:11%}
+.card.bi .w{margin-top:-3cqi;padding:0;font-size:min(23cqi,calc(160cqi / max(var(--len,6),5)))}
+.card.bi.two .w{font-size:min(15cqi,calc(150cqi / max(var(--len,6),5)));line-height:1}
+.card.bi .we{display:block;font-family:var(--word);text-transform:uppercase;letter-spacing:.05em;color:var(--soft);line-height:1;white-space:nowrap;max-width:100%;overflow:hidden;font-size:min(12cqi,calc(132cqi / max(var(--lene,6),6)))}
+.card.bi.two .we{font-size:min(9cqi,calc(115cqi / max(var(--lene,6),6)))}
+.card.bi .back{gap:1.6cqi}
+.card.bi .back svg{height:27cqi}
+.card.bi .back .w2{font-size:min(11cqi,calc(140cqi / max(var(--len2,6),6)))}
+.card.bi .we2{display:block;font-family:var(--word);text-transform:uppercase;letter-spacing:.06em;line-height:1;opacity:.7;white-space:nowrap;max-width:100%;overflow:hidden;font-size:min(8cqi,calc(105cqi / max(var(--lene,6),6)))}
+.ctl .lang button#lbi{letter-spacing:.02em}
+.kgrid.bi .k{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5cqi;padding:0 2cqi}
+.kgrid.bi .k .w{font-size:min(26cqi,calc(175cqi / max(var(--len,6),5)))}
+.kgrid.bi .k.two .w{font-size:min(17cqi,calc(140cqi / max(var(--len,6),5)));line-height:1}
+.kgrid.bi .k .we{display:block;font-family:var(--word);text-transform:uppercase;letter-spacing:.04em;line-height:1;opacity:.8;white-space:nowrap;max-width:92%;overflow:hidden;font-size:min(20cqi,calc(152cqi / max(var(--lene,6),6)))}
+
 /* ---------- end ---------- */
 .end{position:fixed;inset:0;z-index:25;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3vh,30px);color:#fff;text-align:center;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));clip-path:circle(0% at 50% 50%);transition:clip-path .9s var(--ease)}
@@ -611,7 +629,7 @@ html.magicon, html.magicon *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http:/
 </svg>
 
 <div class="ctl" id="ctl">
-  <div class="lang" role="group" aria-label="Language"><button id="lhy" type="button">ՀԱՅ</button><button id="len" type="button">EN</button></div>
+  <div class="lang" role="group" aria-label="Language"><button id="lhy" type="button">ՀԱՅ</button><button id="lbi" type="button" aria-label="Armenian and English">ՀԱՅ+EN</button><button id="len" type="button">EN</button></div>
   <button class="ic" id="snd" type="button" aria-label="Sound"><svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><g class="w"><path d="M16 9a4 4 0 0 1 0 6"/><path d="M18.5 6.5a8 8 0 0 1 0 11"/></g><g class="x"><path d="M16 9l5 5M21 9l-5 5"/></g></svg></button>
   <button class="ic" id="magBtn" type="button" aria-label="Magnifying glass"><svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.5"/><path d="M15 15l6 6"/></svg></button>
   <button class="ic" id="fs" type="button" aria-label="Fullscreen"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
@@ -3185,7 +3203,8 @@ const T = {
 };
 let lang = 'hy';
 try{ lang = localStorage.getItem('ctz-lang') || 'hy'; }catch(e){}
-const L = () => T[lang];
+if(!['hy','en','bi'].includes(lang)) lang = 'hy';
+const L = () => T[lang === 'en' ? 'en' : 'hy'];
 
 /* ================= SOUND ================= */
 const Snd = (() => {
@@ -3271,7 +3290,8 @@ let names = { r:'', b:'' }, hardPref = false;
 try{ const n = JSON.parse(localStorage.getItem('ctz-names') || 'null'); if(n) names = { r:n.r || '', b:n.b || '' }; hardPref = localStorage.getItem('ctz-hard') === '1'; }catch(e){}
 const tname = t => (names[t] || '').trim() || (t === 'r' ? L().red : L().blue);
 const newCode = () => { let c; do{ c = 1000 + Math.floor(Math.random()*9000); }while(String(c) === G.code || (c % 7 === 0) !== hardPref); return String(c); };
-const word = i => WORDS[G.words[i]][lang === 'hy' ? 1 : 0];
+const word = i => WORDS[G.words[i]][lang === 'en' ? 0 : 1];
+const wordEn = i => WORDS[G.words[i]][0];
 
 /* ================= ROOM (lights up when this page runs on claude.ai) ================= */
 let room = null, liveAt = 0;
@@ -3350,9 +3370,9 @@ function setHash(){
 
 /* ================= TEXT RENDER ================= */
 function applyText(){
-  document.documentElement.lang = lang === 'hy' ? 'hy' : 'en';
+  document.documentElement.lang = lang === 'en' ? 'en' : 'hy';
   document.querySelectorAll('[data-t]').forEach(el => { const v = L()[el.dataset.t]; if(typeof v === 'string') el.textContent = v; });
-  $('lhy').setAttribute('aria-pressed', lang === 'hy'); $('len').setAttribute('aria-pressed', lang === 'en');
+  $('lhy').setAttribute('aria-pressed', lang === 'hy'); $('lbi').setAttribute('aria-pressed', lang === 'bi'); $('len').setAttribute('aria-pressed', lang === 'en');
   $('clueIn').placeholder = L().cluePh;
   if(cur === 'how') renderCap(false);
   if(cur === 'lobby') renderLobby();
@@ -3363,7 +3383,7 @@ function applyText(){
   storyText();
 }
 function setLang(l){ if(l === lang) return; lang = l; try{ localStorage.setItem('ctz-lang', l); }catch(e){} applyText(); }
-$('lhy').onclick = () => setLang('hy'); $('len').onclick = () => setLang('en');
+$('lhy').onclick = () => setLang('hy'); $('lbi').onclick = () => setLang('bi'); $('len').onclick = () => setLang('en');
 $('snd').classList.toggle('off', !Snd.on);
 $('snd').onclick = () => $('snd').classList.toggle('off', !Snd.toggle());
 $('fs').onclick = () => { const d = document; if(d.fullscreenElement){ d.exitFullscreen && d.exitFullscreen().catch(()=>{}); } else { const p = d.documentElement.requestFullscreen && d.documentElement.requestFullscreen(); p && p.catch && p.catch(()=>{}); } };
@@ -3564,7 +3584,7 @@ const C = { ink:'#151515', r:'#E1251B', b:'#1D4FD6', grey:'#A29F97' };
 const on = (el, v=true) => (typeof el === 'string' ? $(el) : el).classList.toggle('on', v);
 function body(f, cls){ f.b.classList.remove('hop','bob','slump','cheer','lean'); if(cls){ void f.b.getBBox(); f.b.classList.add(cls); } }
 function storyText(){
-  const hy = lang === 'hy', l = L();
+  const hy = lang !== 'en', l = L();
   story.classList.toggle('hy', hy);
   dcs.forEach(c => c.tx.textContent = hy ? c.d.hy : c.d.en);
   phR.tx.textContent = phB.tx.textContent = l.keyU;
@@ -3792,7 +3812,7 @@ function buildBoard(){
   board.innerHTML = ''; figState.r = figState.b = -1;
   for(let i=0;i<25;i++){
     const b = document.createElement('button'); b.type = 'button'; b.className = 'card'; b.style.setProperty('--i', i);
-    b.innerHTML = '<span class="in"><span class="face front"><span class="w"></span></span><span class="face back"><svg viewBox="-22 -84 44 84" aria-hidden="true"><use href="#person" x="-22" y="-84" width="44" height="84"/></svg><span class="w2"></span></span></span>';
+    b.innerHTML = '<span class="in"><span class="face front"><span class="w"></span><span class="we"></span></span><span class="face back"><svg viewBox="-22 -84 44 84" aria-hidden="true"><use href="#person" x="-22" y="-84" width="44" height="84"/></svg><span class="w2"></span><span class="we2"></span></span></span>';
     b.addEventListener('click', () => pick(i));
     board.appendChild(b);
   }
@@ -3831,13 +3851,19 @@ function drawFigs(t){
   });
   figState[t] = found;
 }
+/* bilingual: the English name sits under the Armenian, sized to its own length */
+function setEn(el, i){
+  const e = lang === 'bi' ? wordEn(i) : '';
+  el.querySelectorAll('.we,.we2').forEach(x => x.textContent = e);
+  el.style.setProperty('--lene', e.length || 6);
+}
 function cardText(i){
   const el = board.children[i], w = word(i), r = G.rev[i];
   el.querySelector('.w').textContent = w; el.querySelector('.w2').textContent = w;
   fitLen(el, w);
   el.querySelector('use').setAttribute('href', G.key[i] === 'a' ? '#assassin' : G.key[i] === 'n' ? '#person' : '#agent');
-  el.className = 'card ' + (lang === 'hy' ? 'hy ' : '') + (r || peekAll ? 'rev t-' + G.key[i] : '') + (G.over || r ? ' locked' : '') + (peekAll && !r ? ' ghost' : '');
-  fitLen(el, w);
+  el.className = 'card ' + (lang !== 'en' ? 'hy ' : '') + (lang === 'bi' ? 'bi ' : '') + (r || peekAll ? 'rev t-' + G.key[i] : '') + (G.over || r ? ' locked' : '') + (peekAll && !r ? ' ghost' : '');
+  fitLen(el, w); setEn(el, i);
   el.setAttribute('aria-label', w);
 }
 function renderGame(all){
@@ -4019,16 +4045,16 @@ function renderSpy(){
   if(spyCode && spyOpen) renderKey();
 }
 function renderKey(){
-  const g = $('kgrid'); g.classList.toggle('hy', lang === 'hy');
+  const g = $('kgrid'); g.classList.toggle('hy', lang !== 'en'); g.classList.toggle('bi', lang === 'bi');
   if(g.children.length !== 25){
     g.innerHTML = '';
-    for(let i=0;i<25;i++){ const k = document.createElement('button'); k.type = 'button'; k.className = 'k'; k.innerHTML = '<span class="w"></span>';
+    for(let i=0;i<25;i++){ const k = document.createElement('button'); k.type = 'button'; k.className = 'k'; k.innerHTML = '<span class="w"></span><span class="we"></span>';
       k.onclick = () => { if(Date.now() - liveAt < 12000) return; spyMarks[i] = !spyMarks[i]; saveMarks(); renderKey(); }; g.appendChild(k); }
   }
   const live = Date.now() - liveAt < 12000;
   [...g.children].forEach((k,i) => {
     const w = word(i); k.className = 'k t-' + G.key[i] + ((live ? G.rev[i] : spyMarks[i]) ? ' done' : '');
-    k.firstChild.textContent = w; fitLen(k, w);
+    k.firstChild.textContent = w; fitLen(k, w); setEn(k, i);
   });
   $('kCode').textContent = spyCode;
   const lv = $('kLive'); lv.classList.toggle('on', live); lv.lastChild.textContent = live ? L().live : L().offline;
