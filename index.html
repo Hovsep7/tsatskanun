@@ -356,13 +356,13 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .front{transition:transform .2s var(--ease),box-shadow .2s,border-color .2s}
 .w{font-family:var(--word);font-weight:800;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;line-height:1;padding:0 6%;margin-top:-4%;
    font-size:min(30cqi,calc(185cqi / max(var(--len,6),5)))}
-.two .w,.two .w2{white-space:pre;text-align:center;line-height:1.02}
+.two .w{white-space:pre;text-align:center;line-height:1.02}
 .card.two .w{font-size:min(22cqi,calc(185cqi / max(var(--len,6),5)))}
 .hy.two .w,.kgrid.hy .k.two .w{font-size:min(22cqi,calc(185cqi / max(var(--len,6),5)))}
 .hy .w{font-family:var(--hy);text-transform:none;letter-spacing:.02em;font-size:min(30cqi,calc(185cqi / max(var(--len,6),5)))}
-.back{transform:rotateY(180deg);color:#fff;grid-template-rows:1fr auto;padding:8% 0 9%}
-.back svg{height:42cqi;aspect-ratio:44/84;width:auto;align-self:end;overflow:visible}
-.back .w2{font-family:var(--word);text-transform:uppercase;letter-spacing:.06em;font-size:min(13cqi,calc(110cqi / max(var(--len,6),5)));opacity:.8;white-space:nowrap}
+.back{transform:rotateY(180deg);color:#fff;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:2.5cqi;padding:0 6cqi}
+.back svg{height:34cqi;aspect-ratio:44/84;width:auto;flex:none;overflow:visible}
+.back .w2{font-family:var(--word);text-transform:uppercase;letter-spacing:.05em;font-size:min(12cqi,calc(150cqi / max(var(--len2,6),6)));line-height:1;opacity:.85;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:clip;flex:none}
 .hy .back .w2{font-family:var(--hy);text-transform:none;letter-spacing:0}
 .t-r .back{background:var(--red)}.t-b .back{background:var(--blue)}
 .t-n .back{background:var(--sand);color:var(--sand-ink)}
@@ -3799,7 +3799,8 @@ function fitLen(el, w){
   const t = twoLines(w);
   el.classList.toggle('two', !!t);
   el.style.setProperty('--len', t ? t.m : w.length);
-  if(t) el.querySelectorAll('.w,.w2').forEach(x => x.textContent = t.text);
+  el.style.setProperty('--len2', w.length);
+  if(t) el.querySelectorAll('.w').forEach(x => x.textContent = t.text);
 }
 const figState = { r:-1, b:-1 };
 function drawFigs(t){
