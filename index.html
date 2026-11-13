@@ -476,6 +476,8 @@ html.magicon, html.magicon *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http:/
 .host .starts .chip{margin-top:3px;flex:none}
 #lStart{width:100%;font-size:clamp(24px,2.2vw,32px);padding:.5em 1em}
 .host-links{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pickform{display:flex;gap:8px;align-items:center}
+.pickform input{flex:1;min-width:0;font:400 30px var(--stencil);letter-spacing:.14em;text-align:center;padding:6px 8px;border:2px solid var(--ink);border-radius:12px;background:var(--paper);color:var(--ink)}
 @media (max-width:900px){
   .lobby-wrap{grid-template-columns:1fr;gap:18px;padding-block:68px 20px;max-width:560px}
   .join .qrbox{width:clamp(110px,30vw,170px)}
@@ -671,7 +673,8 @@ html.magicon, html.magicon *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http:/
       <div class="hardsw" id="hardSw" role="switch" aria-checked="false" tabindex="0"><span class="sw"></span><span><span class="t" data-t="hard"></span><small class="t" data-t="hardHint"></small></span></div>
       <div class="starts t" id="lStarts"></div>
       <button class="btn main t" id="lStart"></button>
-      <div class="host-links"><button class="link t" id="lNew" data-t="newCode"></button><button class="link t" id="lHome" data-t="backTitle"></button></div>
+      <div class="host-links"><button class="link t" id="lNew" data-t="newCode"></button><button class="link t" id="lPick" data-t="pickCode"></button><button class="link t" id="lHome" data-t="backTitle"></button></div>
+      <form class="pickform" id="pickForm" hidden><input id="pickIn" inputmode="numeric" maxlength="4" placeholder="0000" autocomplete="off" aria-label="Game number"><button class="btn small main t" type="submit" data-t="open"></button></form>
     </div>
   </div>
 </section>
@@ -3146,7 +3149,7 @@ const T = {
    spymasterU:"ԼՐՏԵՍԱՊԵՏ",redTurnU:"ԿԱՐՄԻՐԻՆ ՀԵՐԹԸ",blueTurnU:"ԿԱՊՈՅՏԻՆ ՀԵՐԹԸ",redWinsU:"ԿԱՐՄԻՐԸ ՅԱՂԹԵՑ",
    operation:"ԳՈՐԾՈՂՈՒԹԻՒՆ",lobbyQR:"Լրտեսապետներ՝ սքանեցէք QR կոդը ձեր հեռաձայնով։ Կամ բացէք այս էջը, ընտրեցէք «Լրտեսապետի բանալին» եւ գրեցէք ծածկագիրը։",lobbyInstr:"Լրտեսապետներ՝ բացէք այս էջը հեռաձայնով, ընտրեցէք «Լրտեսապետի բանալին» եւ գրեցէք այս ծածկագիրը։",
    spies:n=>n===0?"Լրտեսապետ դեռ միացած չէ":`${n} լրտեսապետ միացած է`,moved:c=>`Գլխաւոր պաստառը նոր խաղ սկսաւ (${c})։ Անցնիլ →`,join:c=>`Միանալ ${c} խաղին`,
-   starts:(t,o)=>`${t}ը կը սկսի՝ 9 գործակալով։ ${o}ը ունի 8։`,start:"Սկսիլ",resume:"Շարունակել",newCode:"Նոր ծածկագիր",backTitle:"Գլխաւոր էջ",
+   starts:(t,o)=>`${t}ը կը սկսի՝ 9 գործակալով։ ${o}ը ունի 8։`,start:"Սկսիլ",resume:"Շարունակել",newCode:"Նոր ծածկագիր",pickCode:"Խաղի թիւ",backTitle:"Գլխաւոր էջ",
    hard:"Դժուար խաղ",hardHint:"Թեմատիկ տախտակ · առանց յաւելեալ գուշակութեան · 90 վրկ. հերթ",hardU:"ԴԺՈՒԱՐ",timeUp:"Ժամանակը լրացաւ",
    red:"Կարմիր",blue:"Կապոյտ",left:"մնացած գործակալ",turn:t=>`${t}ին հերթը`,clue:"Յուշում",endTurn:"Հերթը փոխանցել",undo:"Ետ առնել",
    newGame:"Նոր խաղ",sure:"Վստա՞հ ես",showClue:"Ցուցադրել",cancel:"Չեղարկել",cluePh:"Բառը",
@@ -3170,7 +3173,7 @@ const T = {
    spymasterU:"SPYMASTER",redTurnU:"RED'S TURN",blueTurnU:"BLUE'S TURN",redWinsU:"RED WINS",
    operation:"OPERATION",lobbyQR:"Spymasters: scan the QR code with your phone. Or open this page, choose Spymaster key, and enter the number.",lobbyInstr:"Spymasters: open this page on your phone, choose Spymaster key, and enter this code.",
    spies:n=>n===0?"No spymaster connected yet":n===1?"1 spymaster connected":`${n} spymasters connected`,moved:c=>`The main screen started a new game (${c}). Switch →`,join:c=>`Join game ${c}`,
-   starts:(t,o)=>`${t} goes first with 9 agents. ${o} has 8.`,start:"Start",resume:"Continue",newCode:"New code",backTitle:"Title screen",
+   starts:(t,o)=>`${t} goes first with 9 agents. ${o} has 8.`,start:"Start",resume:"Continue",newCode:"New code",pickCode:"Game no.",backTitle:"Title screen",
    hard:"Hard mode",hardHint:"Themed board · no bonus guess · 90-second turns",hardU:"HARD",timeUp:"Time's up",
    red:"Red",blue:"Blue",left:"agents left",turn:t=>`${t}'s turn`,clue:"Clue",endTurn:"End turn",undo:"Undo",
    newGame:"New game",sure:"Sure?",showClue:"Show",cancel:"Cancel",cluePh:"Word",
@@ -3724,6 +3727,18 @@ function renderQR(){
   $('lInstr').textContent = ok ? L().lobbyQR : L().lobbyInstr;
 }
 let shownCode = null;
+/* open a planned game by its number, from the lobby or by changing #g0000 in the address */
+function openCode(v){
+  if(!/^\d{4}$/.test(v) || +v < 1000) return false;
+  load(v); hardPref = isHard(v); show('lobby'); setHash(); Snd.stamp(); return true;
+}
+$('lPick').onclick = () => { const f = $('pickForm'); f.hidden = !f.hidden; if(!f.hidden){ $('pickIn').value = ''; $('pickIn').focus(); } };
+$('pickForm').addEventListener('submit', e => { e.preventDefault(); if(openCode($('pickIn').value.trim())) $('pickForm').hidden = true; else { $('pickIn').value = ''; $('pickIn').focus(); } });
+addEventListener('hashchange', () => {
+  const m = location.hash.match(/^#([gs])(\d{4})$/); if(!m) return;
+  if(m[1] === 'g' && (cur !== 'lobby' || m[2] !== G.code)) openCode(m[2]);
+  if(m[1] === 's' && m[2] !== spyCode){ show('spy'); openSpy(m[2]); }
+});
 function rollCode(code){
   const el = $('lCode');
   if(shownCode === code || reduce || shownCode === null){ el.innerHTML = [...code].map(d => `<span class="dg">${d}</span>`).join(''); shownCode = code; return; }
