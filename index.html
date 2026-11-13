@@ -374,6 +374,91 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .flash.go{animation:flashA 1.1s ease-out}
 @keyframes flashA{0%{opacity:.9}20%{opacity:.2;background:var(--night)}100%{opacity:0}}
 
+/* ---------- lobby setup: names + hard mode ---------- */
+.setup{display:flex;gap:clamp(10px,2vw,22px);align-items:center;flex-wrap:wrap;justify-content:center}
+.tname{display:flex;align-items:center;gap:8px;border:2px solid var(--line);border-radius:12px;padding:4px 6px 4px 10px;background:var(--card)}
+.tname i{width:14px;height:14px;border-radius:4px;flex:none}
+.tname.red i{background:var(--red)}.tname.blue i{background:var(--blue)}
+.tname input{border:0;background:transparent;font:400 26px var(--ui);letter-spacing:.04em;color:var(--ink);width:9em;max-width:38vw;padding:6px 2px;outline:none}
+.tname.red input{color:var(--red)}.tname.blue input{color:var(--blue)}
+.tname:focus-within{border-color:var(--ink)}
+.hardsw{display:flex;align-items:center;gap:10px;font-size:24px;cursor:pointer;user-select:none}
+.hardsw .sw{width:52px;height:30px;border-radius:999px;background:var(--line);position:relative;transition:background .25s}
+.hardsw .sw::after{content:"";position:absolute;top:4px;left:4px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .3s var(--spring);box-shadow:0 1px 2px rgba(0,0,0,.25)}
+.hardsw[aria-checked="true"] .sw{background:var(--ink)}
+.hardsw[aria-checked="true"] .sw::after{transform:translateX(22px)}
+.hardsw small{font-size:18px;color:var(--soft);display:block;letter-spacing:.04em}
+.hardtag{display:inline-block;background:var(--ink);color:var(--paper);border-radius:6px;padding:1px 8px;font-size:15px;letter-spacing:.12em;margin-left:8px;vertical-align:middle}
+/* turn timer */
+.timer{display:flex;align-items:center;gap:10px;font-family:var(--stencil);font-size:26px;font-variant-numeric:tabular-nums;cursor:pointer;user-select:none}
+.timer .bar{width:clamp(120px,14vw,220px);height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+.timer .bar i{display:block;height:100%;width:100%;background:var(--ink);transform-origin:left;transition:transform .25s linear,background .3s}
+.timer.red .bar i{background:var(--red)}.timer.blue .bar i{background:var(--blue)}
+.timer.low{color:var(--red);animation:tpulse .8s ease-in-out infinite}
+.timer.paused{opacity:.45}
+@keyframes tpulse{50%{transform:scale(1.08)}}
+
+/* ---------- turn sweep ---------- */
+.sweep{position:fixed;inset:0;z-index:35;pointer-events:none;display:grid;place-items:center;color:#fff;clip-path:inset(0 100% 0 0)}
+.sweep.red{background:var(--red)}.sweep.blue{background:var(--blue)}
+.sweep b{font-family:var(--hy);font-weight:400;font-size:min(14vw,26vh);line-height:.9;letter-spacing:.02em;text-align:center;padding:0 5vw;transform:translateX(-8vw);text-wrap:balance}
+.sweep .stripe{position:absolute;left:0;right:0;height:3.2vh;background:rgba(255,255,255,.14)}
+.sweep .stripe:nth-child(1){top:18%}.sweep .stripe:nth-child(2){bottom:18%}
+.sweep.go{animation:sweepA 1.45s cubic-bezier(.7,0,.3,1) forwards}
+.sweep.go b{animation:sweepT 1.45s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes sweepA{0%{clip-path:inset(0 100% 0 0)}28%,68%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 0 0 100%)}}
+@keyframes sweepT{0%{transform:translateX(-10vw);opacity:0}30%{transform:none;opacity:1}68%{transform:translateX(1.5vw)}100%{transform:translateX(10vw);opacity:0}}
+
+/* ---------- bigger reveals ---------- */
+.card{--burst:var(--ink)}
+.card.t-r{--burst:var(--red)}.card.t-b{--burst:var(--blue)}.card.t-n{--burst:var(--sand)}.card.t-a{--burst:var(--red)}
+.card::after{content:"";position:absolute;inset:-4px;border-radius:12px;border:5px solid var(--burst);opacity:0;pointer-events:none}
+.card.just::after{animation:burst .8s ease-out .32s}
+@keyframes burst{0%{opacity:.9;transform:scale(.96)}100%{opacity:0;transform:scale(1.22)}}
+.card.just .back svg{animation:stepout .75s var(--spring) .3s backwards}
+.card.just.t-n .back svg{animation:stepout .75s var(--spring) .3s backwards,shrug .7s ease-in-out 1.05s}
+.card.just .in{transition-duration:.6s}
+@keyframes stepout{0%{transform:translateY(55%) scale(.3);opacity:0}100%{transform:none;opacity:1}}
+@keyframes shrug{30%{transform:rotate(-9deg)}65%{transform:rotate(7deg)}}
+.card.ghost .back{opacity:.42}
+.card.ghost .back svg{opacity:.6}
+.amoment{position:fixed;inset:0;z-index:45;pointer-events:none;background:var(--night);display:grid;place-items:center;opacity:0}
+.amoment .inner{display:flex;flex-direction:column;align-items:center;gap:2vh}
+.amoment svg{height:46vh;aspect-ratio:44/84;color:var(--red)}
+.amoment b{font-family:var(--hy);font-weight:400;font-size:min(13vw,18vh);color:var(--red);line-height:.9;letter-spacing:.06em}
+.amoment.go{animation:amA 2.1s ease forwards}
+.amoment.go svg{animation:amF 2.1s cubic-bezier(.2,.9,.3,1) forwards}
+.amoment.go b{animation:amT 2.1s steps(1) forwards}
+@keyframes amA{0%{opacity:0}6%{opacity:1}80%{opacity:1}100%{opacity:0}}
+@keyframes amF{0%{transform:translateY(40%) scale(.4)}25%{transform:scale(1.08)}35%{transform:none}85%{transform:scale(1.02)}100%{transform:scale(1.4);opacity:0}}
+@keyframes amT{0%{opacity:0}22%{opacity:1;transform:translateX(-6px)}26%{transform:translateX(5px)}30%{transform:none}100%{opacity:1}}
+
+/* ---------- win: confetti, then dock over the revealed board ---------- */
+#confetti{position:fixed;inset:0;width:100vw;height:100vh;z-index:26;pointer-events:none}
+.end{transition:clip-path .9s var(--ease),top .6s var(--ease),padding .6s var(--ease)}
+.end.dock{top:auto;flex-direction:row;flex-wrap:wrap;gap:10px 22px;padding-block:14px calc(14px + env(safe-area-inset-bottom,0px));clip-path:none;box-shadow:0 -6px 0 rgba(0,0,0,.12)}
+.end.dock h2{font-size:clamp(34px,4.4vw,60px)}
+.end.dock .lineup{display:none}
+.end.dock .sub{font-size:22px}
+.end.dock #endBoard{display:none}
+body.docked .board-wrap{padding-bottom:120px}
+body.docked .board{max-width:min(1500px,calc((100dvh - 360px) * 1.42))}
+
+/* ---------- magnifying glass ---------- */
+html.mag, html.mag *{cursor:none!important}
+html.magicon, html.magicon *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Ccircle cx='13' cy='13' r='9.5' fill='rgba(255,255,255,.35)' stroke='%23151515' stroke-width='3.2'/%3E%3Cpath d='M20 20 L31 31' stroke='%23151515' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='10' r='2.6' fill='%23fff'/%3E%3C/svg%3E") 13 13, auto!important}
+.lensw{position:fixed;left:0;top:0;z-index:80;pointer-events:none;width:0;height:0;will-change:transform}
+.lensw[hidden]{display:none}
+.lens{position:absolute;left:calc(var(--R) * -1);top:calc(var(--R) * -1);width:calc(var(--R) * 2);height:calc(var(--R) * 2);border-radius:50%;overflow:hidden;background:var(--paper);
+  border:7px solid var(--ink);box-shadow:0 0 0 2px rgba(255,255,255,.6) inset,6px 8px 0 rgba(0,0,0,.18)}
+.lens::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.45),rgba(255,255,255,0) 38%);pointer-events:none}
+.lens-in{position:absolute;left:0;top:0;transform-origin:0 0}
+.lens-in,.lens-in *{animation:none!important;transition:none!important}
+.lens-in .screen,.lens-in .end,.lens-in .ctl{position:absolute!important}
+.handle{position:absolute;left:calc(var(--R) * .62);top:calc(var(--R) * .62);width:calc(var(--R) * .95);height:calc(var(--R) * .26);border-radius:999px;background:var(--ink);transform-origin:0 50%;transform:rotate(45deg);box-shadow:4px 6px 0 rgba(0,0,0,.18)}
+.handle::before{content:"";position:absolute;left:-6%;top:-12%;bottom:-12%;width:22%;border-radius:6px;background:#3a3935}
+#magBtn.on{color:var(--paper);background:var(--ink);border-color:var(--ink)}
+
 /* ---------- end ---------- */
 .end{position:fixed;inset:0;z-index:25;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3vh,30px);color:#fff;text-align:center;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));clip-path:circle(0% at 50% 50%);transition:clip-path .9s var(--ease)}
@@ -456,6 +541,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 <div class="ctl" id="ctl">
   <div class="lang" role="group" aria-label="Language"><button id="lhy" type="button">ՀԱՅ</button><button id="len" type="button">EN</button></div>
   <button class="ic" id="snd" type="button" aria-label="Sound"><svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><g class="w"><path d="M16 9a4 4 0 0 1 0 6"/><path d="M18.5 6.5a8 8 0 0 1 0 11"/></g><g class="x"><path d="M16 9l5 5M21 9l-5 5"/></g></svg></button>
+  <button class="ic" id="magBtn" type="button" aria-label="Magnifying glass"><svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.5"/><path d="M15 15l6 6"/></svg></button>
   <button class="ic" id="fs" type="button" aria-label="Fullscreen"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
 </div>
 <div class="flash" id="flash"></div>
@@ -508,6 +594,11 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
       <div class="spies" id="lSpies" hidden><i></i><span></span></div>
     </div>
   </div>
+  <div class="setup">
+    <label class="tname red"><i></i><input id="nameR" maxlength="16" autocomplete="off" aria-label="Red team name"></label>
+    <label class="tname blue"><i></i><input id="nameB" maxlength="16" autocomplete="off" aria-label="Blue team name"></label>
+    <div class="hardsw" id="hardSw" role="switch" aria-checked="false" tabindex="0"><span class="sw"></span><span><span class="t" data-t="hard"></span><small class="t" data-t="hardHint"></small></span></div>
+  </div>
   <div class="starts t" id="lStarts"></div>
   <div class="title-actions">
     <div class="row"><button class="btn main t" id="lStart"></button><button class="btn t" id="lNew" data-t="newCode"></button></div>
@@ -519,9 +610,10 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 <section class="screen" id="game" hidden>
   <button class="home" id="gHome" aria-label="Title screen"><span class="mini"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="eyebrow" id="gCode"></span><span class="gspies" id="gSpies" hidden><svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg><b></b></span></button>
   <div class="gbar">
-    <div class="tally red" id="tR"><span class="n" id="nR">9</span><span class="lbl"><b class="t" data-t="red"></b><span class="t" data-t="left"></span></span></div>
+    <div class="tally red" id="tR"><span class="n" id="nR">9</span><span class="lbl"><b id="nmR"></b><span class="t" data-t="left"></span></span></div>
     <div class="center">
       <div class="turn t" id="turn"></div>
+      <div class="timer" id="timer" hidden title="Pause"><span id="tSec">1:30</span><span class="bar"><i id="tBar"></i></span></div>
       <div class="clue" id="clueShow" hidden><span class="cw" id="clueW"></span><span class="cn" id="clueN"></span><span class="pips" id="pips"></span></div>
       <form class="clueform" id="clueForm" hidden>
         <input type="text" id="clueIn" maxlength="24" autocomplete="off" aria-label="Clue word">
@@ -536,11 +628,14 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
         <button class="btn small t" id="aNew" data-t="newGame"></button>
       </div>
     </div>
-    <div class="tally blue" id="tB"><span class="n" id="nB">8</span><span class="lbl"><b class="t" data-t="blue"></b><span class="t" data-t="left"></span></span></div>
+    <div class="tally blue" id="tB"><span class="n" id="nB">8</span><span class="lbl"><b id="nmB"></b><span class="t" data-t="left"></span></span></div>
   </div>
   <div class="board-wrap"><div class="board" id="board"></div></div>
 </section>
 
+<div class="sweep" id="sweep" aria-hidden="true"><span class="stripe"></span><span class="stripe"></span><b id="sweepT"></b></div>
+<div class="amoment" id="amoment" aria-hidden="true"><div class="inner"><svg viewBox="-22 -84 44 84"><use href="#assassin" x="-22" y="-84" width="44" height="84"/></svg><b id="amT"></b></div></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
 <div class="end" id="end" hidden>
   <div class="lineup" id="lineup"></div>
   <h2 class="t" id="endH"></h2>
@@ -575,6 +670,8 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   </div>
 </section>
 
+<!-- the lens sits last, so every lookup by id still finds the real element first -->
+<div class="lensw" id="lensw" hidden><div class="handle"></div><div class="lens"><div class="lens-in" id="lensIn"></div></div></div>
 <script>
 //---------------------------------------------------------------------
 //
@@ -2882,63 +2979,74 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ================= WORDS: [English, Western Armenian] ================= */
 const WORDS = [
-["Tongue", "Լեզու"],["Face", "Երես"],["Palm", "Ափ"],["Finger", "Մատ"],["Forehead", "Ճակատ"],["Head", "Գլուխ"],
-["Arm", "Թեւ"],["Heart", "Սիրտ"],["Eye", "Աչք"],["Mouth", "Բերան"],["Tooth", "Ակռայ"],["Knee", "Ծունկ"],
-["Back", "Մէջք"],["Bone", "Ոսկոր"],["Hair", "Մազ"],["Fingernail", "Եղունգ"],["Soul", "Հոգի"],["Wolf", "Գայլ"],
-["Bear", "Արջ"],["Fox", "Աղուէս"],["Donkey", "Էշ"],["Camel", "Ուղտ"],["Rooster", "Աքաղաղ"],["Owl", "Բու"],
-["Scorpion", "Կարիճ"],["Lion", "Առիւծ"],["Fish", "Ձուկ"],["Spider", "Սարդ"],["Ant", "Մրջիւն"],["Bee", "Մեղու"],
-["Fly", "Ճանճ"],["Butterfly", "Թիթեռնիկ"],["Monkey", "Կապիկ"],["Tiger", "Վագր"],["Dove", "Աղաւնի"],["Eagle", "Արծիւ"],
-["Snake", "Օձ"],["Mouse", "Մուկ"],["Tail", "Պոչ"],["Paw", "Թաթ"],["Beak", "Կտուց"],["Feather", "Փետուր"],
-["Nest", "Բոյն"],["Horse", "Ձի"],["Elephant", "Փիղ"],["Soldier", "Զինուոր"],["Queen", "Թագուհի"],["King", "Թագաւոր"],
-["Boat", "Նաւակ"],["Paper", "Թուղթ"],["Ball", "Գնդակ"],["Treasure", "Գանձ"],["Shield", "Վահան"],["Sword", "Սուր"],
-["Bow", "Աղեղ"],["Arrow", "Նետ"],["Fortress", "Բերդ"],["Tower", "Աշտարակ"],["Palace", "Պալատ"],["Crown", "Թագ"],
-["Seal", "Կնիք"],["General", "Զօրավար"],["Emperor", "Կայսր"],["Prince", "Իշխան"],["Violin", "Ջութակ"],["Duduk", "Տուտուկ"],
-["Zurna", "Զուռնա"],["Drum", "Թմբուկ"],["Note", "Նոտա"],["Clap", "Ծափ"],["Stage", "Բեմ"],["Curtain", "Վարագոյր"],
-["Mask", "Դիմակ"],["Statue", "Արձան"],["Picture", "Նկար"],["Ribbon", "Ժապաւէն"],["Wave", "Ալիք"],["Dance", "Պար"],
-["Song", "Երգ"],["House", "Տուն"],["Voice", "Ձայն"],["Hour", "Ժամ"],["Table", "Սեղան"],["Cross", "Խաչ"],
-["Candle", "Մոմ"],["Bell", "Զանգ"],["Monastery", "Վանք"],["Shepherd", "Հովիւ"],["Priest", "Քահանայ"],["Dome", "Գմբէթ"],
-["Ararat", "Արարատ"],["Masis", "Մասիս"],["Sevan", "Սեւան"],["Aragats", "Արագած"],["Yerevan", "Երեւան"],["Dragon", "Վիշապ"],
-["Khachkar", "Խաչքար"],["Alphabet", "Այբուբեն"],["Letter", "Տառ"],["Homenetmen", "ՀՄԸՄ"],["Jerusalem", "Երուսաղէմ"],["Old City", "Հին Քաղաք"],
-["St. James", "Սուրբ Յակոբ"],["Patriarchate", "Պատրիարքարան"],["Zion Gate", "Սիոնի Դարպաս"],["Bell Tower", "Զանգակատուն"],["Quarter", "Թաղ"],["City Wall", "Պարիսպ"],
-["Olive Tree", "Ձիթենի"],["Apricot", "Ծիրան"],["Pomegranate", "Նուռ"],["Lavash", "Լաւաշ"],["Manti", "Մանթը"],["Basturma", "Պաստըրմա"],
-["Harissa", "Հարիսա"],["Dolma", "Տոլմա"],["Lahmajun", "Լահմաջուն"],["Olive", "Ձիթապտուղ"],["Bread", "Հաց"],["Salt", "Աղ"],
-["Honey", "Մեղր"],["Cheese", "Պանիր"],["Egg", "Հաւկիթ"],["Fig", "Թուզ"],["Walnut", "Ընկոյզ"],["Pepper", "Պղպեղ"],
-["Onion", "Սոխ"],["Grape", "Խաղող"],["Watermelon", "Ձմերուկ"],["Coffee", "Սուրճ"],["Tea", "Թէյ"],["Milk", "Կաթ"],
-["Dough", "Խմոր"],["Barbecue", "Խորոված"],["Tent", "Վրան"],["Compass", "Կողմնացոյց"],["Rope", "Չուան"],["Knot", "Հանգոյց"],
-["Whistle", "Սուլիչ"],["Campfire", "Խարոյկ"],["Hike", "Արշաւ"],["Scoutmaster", "Խմբապետ"],["Oath", "Երդում"],["Track", "Հետք"],
-["Backpack", "Ուսապարկ"],["Uniform", "Տարազ"],["Flag", "Դրօշ"],["Army", "Բանակ"],["Group", "Խումբ"],["Map", "Քարտէզ"],
-["Spark", "Կայծ"],["Ash", "Մոխիր"],["Source", "Աղբիւր"],["Spring", "Գարուն"],["Peak", "Գագաթ"],["Volcano", "Հրաբուխ"],
-["Cave", "Քարայր"],["Waterfall", "Ջրվէժ"],["Lake", "Լիճ"],["Island", "Կղզի"],["Desert", "Անապատ"],["Sea", "Ծով"],
-["River", "Գետ"],["Mountain", "Լեռ"],["Root", "Արմատ"],["Branch", "Ճիւղ"],["Leaf", "Տերեւ"],["Tree", "Ծառ"],
-["Rainbow", "Ծիածան"],["Cloud", "Ամպ"],["Lightning", "Կայծակ"],["Storm", "Փոթորիկ"],["Fog", "Մշուշ"],["Hail", "Կարկուտ"],
-["Snow", "Ձիւն"],["Ice", "Սառոյց"],["Fire", "Կրակ"],["Smoke", "Ծուխ"],["Shadow", "Շուք"],["Light", "Լոյս"],
-["Moon", "Լուսին"],["Sun", "Արեւ"],["Star", "Աստղ"],["Planet", "Մոլորակ"],["Ray", "Ճառագայթ"],["Night", "Գիշեր"],
-["Dream", "Երազ"],["Giant", "Հսկայ"],["Gold", "Ոսկի"],["Silver", "Արծաթ"],["Iron", "Երկաթ"],["Key", "Բանալի"],
-["Door", "Դուռ"],["Window", "Պատուհան"],["Mirror", "Հայելի"],["Clock", "Ժամացոյց"],["Glasses", "Ակնոց"],["Hat", "Գլխարկ"],
-["Belt", "Գօտի"],["Ring", "Մատանի"],["Chain", "Շղթայ"],["Money", "Դրամ"],["Ticket", "Տոմս"],["Newspaper", "Թերթ"],
-["Book", "Գիրք"],["Mail", "Նամակ"],["Net", "Ցանց"],["Button", "Կոճակ"],["Needle", "Ասեղ"],["Thread", "Թել"],
-["Hammer", "Մուրճ"],["Saw", "Սղոց"],["Match", "Լուցկի"],["Fork", "Պատառաքաղ"],["Plate", "Ափսէ"],["Bottle", "Շիշ"],
-["Wheel", "Անիւ"],["Sail", "Առագաստ"],["Anchor", "Խարիսխ"],["Lighthouse", "Փարոս"],["Bridge", "Կամուրջ"],["Ladder", "Սանդուխ"],
-["Sled", "Սահնակ"],["Bicycle", "Հեծանիւ"],["Ship", "Նաւ"],["Phone", "Հեռաձայն"],["Computer", "Համակարգիչ"],["Rocket", "Հրթիռ"],
-["Arch", "Կամար"],["Pillar", "Սիւն"],["Station", "Կայան"],["Market", "Շուկայ"],["Bank", "Դրամատուն"],["School", "Դպրոց"],
-["Museum", "Թանգարան"],["Hospital", "Հիւանդանոց"],["Point", "Կէտ"],["Corner", "Անկիւն"],["Circle", "Շրջան"],["Line", "Գիծ"],
-["Number", "Թիւ"],["Bill", "Հաշիւ"],["History", "Պատմութիւն"],["Link", "Կապ"],["Plan", "Ծրագիր"],["Password", "Գաղտնաբառ"],
-["Secret", "Գաղտնիք"],["Lesson", "Դաս"],["Exam", "Քննութիւն"],["Spy", "Լրտես"],["Thief", "Գող"],["Judge", "Դատաւոր"],
-["Doctor", "Բժիշկ"],["Master", "Վարպետ"],["Pirate", "Ծովահէն"],["Gyumri", "Գիւմրի"],["Vanadzor", "Վանաձոր"],["Etchmiadzin", "Էջմիածին"],
-["Dilijan", "Դիլիջան"],["Jermuk", "Ջերմուկ"],["Goris", "Գորիս"],["Kapan", "Կապան"],["Garni", "Գառնի"],["Geghard", "Գեղարդ"],
-["Khor Virap", "Խոր Վիրապ"],["Tatev", "Տաթեւ"],["Noravank", "Նորավանք"],["Tsaghkadzor", "Ծաղկաձոր"],["Hrazdan", "Հրազդան"],["Syunik", "Սիւնիք"],
-["Shirak", "Շիրակ"],["Lori", "Լոռի"],["Sardarapat", "Սարդարապատ"],["Ara", "Արա"],["Araks", "Արաքս"],["Van", "Վան"],
-["Ani", "Անի"],["Kars", "Կարս"],["Karin", "Կարին"],["Mush", "Մուշ"],["Sasun", "Սասուն"],["Baghesh", "Բաղէշ"],
-["Kharpert", "Խարբերդ"],["Tigranakert", "Տիգրանակերտ"],["Akhtamar", "Աղթամար"],["Cilicia", "Կիլիկիա"],["Sis", "Սիս"],["Adana", "Ատանա"],
-["Marash", "Մարաշ"],["Aintab", "Այնթապ"],["Zeytun", "Զէյթուն"],["Musa Dagh", "Մուսա Լեռ"],["Sipan", "Սիփան"],["Nemrut", "Նեմրութ"],
-["Euphrates", "Եփրատ"],["Tigris", "Տիգրիս"],["Artsakh", "Արցախ"],["Stepanakert", "Ստեփանակերտ"],["Shushi", "Շուշի"],["Gandzasar", "Գանձասար"],
-["Dadivank", "Դադիվանք"],["Amaras", "Ամարաս"],["Martakert", "Մարտակերտ"],["Hadrut", "Հադրութ"],["Mrav", "Մռաւ"],["Tatik-Papik", "Տատիկ-Պապիկ"],
-["Hayk", "Հայկ"],["Shamiram", "Շամիրամ"],["Tigran the Great", "Տիգրան Մեծ"],["Artashes", "Արտաշէս"],["Trdat", "Տրդատ"],["Levon", "Լեւոն"],
-["Vartan", "Վարդան"],["Avarayr", "Աւարայր"],["Illuminator", "Լուսաւորիչ"],["Mashtots", "Մաշտոց"],["Khorenatsi", "Խորենացի"],["Narekatsi", "Նարեկացի"],
-["Shnorhali", "Շնորհալի"],["Khrimian Hayrik", "Խրիմեան Հայրիկ"],["David of Sasun", "Սասունցի Դաւիթ"],["Andranik", "Անդրանիկ"],["Nzhdeh", "Նժդեհ"],["Aram Manukian", "Արամ Մանուկեան"],
-["Tehlirian", "Թեհլիրեան"],["Monte", "Մոնթէ"],["Komitas", "Կոմիտաս"],["Tumanyan", "Թումանեան"],["Charents", "Չարենց"],["Sevak", "Սեւակ"],
-["Siamanto", "Սիամանթօ"],["Aivazovsky", "Այվազովսկի"],["Saryan", "Սարեան"],["Aznavour", "Ազնաւուր"],["Saroyan", "Սարոյեան"],["Hagopian", "Յակոբեան"],
-["Krissian", "Քրիսեան"]
+["Tongue", "Լեզու", "Body"],["Face", "Երես", "Body"],["Palm", "Ափ", "Body"],["Finger", "Մատ", "Body"],["Forehead", "Ճակատ", "Body"],
+["Head", "Գլուխ", "Body"],["Arm", "Թեւ", "Body"],["Heart", "Սիրտ", "Body"],["Eye", "Աչք", "Body"],["Mouth", "Բերան", "Body"],
+["Tooth", "Ակռայ", "Body"],["Knee", "Ծունկ", "Body"],["Back", "Մէջք", "Body"],["Bone", "Ոսկոր", "Body"],["Hair", "Մազ", "Body"],
+["Fingernail", "Եղունգ", "Body"],["Soul", "Հոգի", "Body"],["Wolf", "Գայլ", "Animals"],["Bear", "Արջ", "Animals"],["Fox", "Աղուէս", "Animals"],
+["Donkey", "Էշ", "Animals"],["Camel", "Ուղտ", "Animals"],["Rooster", "Աքաղաղ", "Animals"],["Owl", "Բու", "Animals"],["Scorpion", "Կարիճ", "Animals"],
+["Lion", "Առիւծ", "Animals"],["Fish", "Ձուկ", "Animals"],["Spider", "Սարդ", "Animals"],["Ant", "Մրջիւն", "Animals"],["Bee", "Մեղու", "Animals"],
+["Fly", "Ճանճ", "Animals"],["Butterfly", "Թիթեռնիկ", "Animals"],["Monkey", "Կապիկ", "Animals"],["Tiger", "Վագր", "Animals"],["Dove", "Աղաւնի", "Animals"],
+["Eagle", "Արծիւ", "Animals"],["Snake", "Օձ", "Animals"],["Mouse", "Մուկ", "Animals"],["Tail", "Պոչ", "Animals"],["Paw", "Թաթ", "Animals"],
+["Beak", "Կտուց", "Animals"],["Feather", "Փետուր", "Animals"],["Nest", "Բոյն", "Animals"],["Horse", "Ձի", "Chess & games"],["Elephant", "Փիղ", "Chess & games"],
+["Soldier", "Զինուոր", "Chess & games"],["Queen", "Թագուհի", "Chess & games"],["King", "Թագաւոր", "Chess & games"],["Boat", "Նաւակ", "Chess & games"],["Paper", "Թուղթ", "Chess & games"],
+["Ball", "Գնդակ", "Chess & games"],["Treasure", "Գանձ", "Chess & games"],["Shield", "Վահան", "History"],["Sword", "Սուր", "History"],["Bow", "Աղեղ", "History"],
+["Arrow", "Նետ", "History"],["Fortress", "Բերդ", "History"],["Tower", "Աշտարակ", "History"],["Palace", "Պալատ", "History"],["Crown", "Թագ", "History"],
+["Seal", "Կնիք", "History"],["General", "Զօրավար", "History"],["Emperor", "Կայսր", "History"],["Prince", "Իշխան", "History"],["Violin", "Ջութակ", "Music & arts"],
+["Duduk", "Տուտուկ", "Music & arts"],["Zurna", "Զուռնա", "Music & arts"],["Drum", "Թմբուկ", "Music & arts"],["Note", "Նոտա", "Music & arts"],["Clap", "Ծափ", "Music & arts"],
+["Stage", "Բեմ", "Music & arts"],["Curtain", "Վարագոյր", "Music & arts"],["Mask", "Դիմակ", "Music & arts"],["Statue", "Արձան", "Music & arts"],["Picture", "Նկար", "Music & arts"],
+["Ribbon", "Ժապաւէն", "Music & arts"],["Wave", "Ալիք", "Music & arts"],["Dance", "Պար", "Music & arts"],["Song", "Երգ", "Music & arts"],["House", "Տուն", "Music & arts"],
+["Voice", "Ձայն", "Music & arts"],["Hour", "Ժամ", "Church"],["Table", "Սեղան", "Church"],["Cross", "Խաչ", "Church"],["Candle", "Մոմ", "Church"],
+["Bell", "Զանգ", "Church"],["Monastery", "Վանք", "Church"],["Shepherd", "Հովիւ", "Church"],["Priest", "Քահանայ", "Church"],["Dome", "Գմբէթ", "Church"],
+["Ararat", "Արարատ", "Armenian"],["Masis", "Մասիս", "Armenian"],["Sevan", "Սեւան", "Armenian"],["Aragats", "Արագած", "Armenian"],["Yerevan", "Երեւան", "Armenian"],
+["Dragon", "Վիշապ", "Armenian"],["Khachkar", "Խաչքար", "Armenian"],["Alphabet", "Այբուբեն", "Armenian"],["Letter", "Տառ", "Armenian"],["Homenetmen", "ՀՄԸՄ", "Armenian"],
+["Jerusalem", "Երուսաղէմ", "Jerusalem"],["Old City", "Հին Քաղաք", "Jerusalem"],["St. James", "Սուրբ Յակոբ", "Jerusalem"],["Patriarchate", "Պատրիարքարան", "Jerusalem"],["Zion Gate", "Սիոնի Դարպաս", "Jerusalem"],
+["Bell Tower", "Զանգակատուն", "Jerusalem"],["Quarter", "Թաղ", "Jerusalem"],["City Wall", "Պարիսպ", "Jerusalem"],["Olive Tree", "Ձիթենի", "Jerusalem"],["Apricot", "Ծիրան", "Food"],
+["Pomegranate", "Նուռ", "Food"],["Lavash", "Լաւաշ", "Food"],["Manti", "Մանթը", "Food"],["Basturma", "Պաստըրմա", "Food"],["Harissa", "Հարիսա", "Food"],
+["Dolma", "Տոլմա", "Food"],["Lahmajun", "Լահմաջուն", "Food"],["Olive", "Ձիթապտուղ", "Food"],["Bread", "Հաց", "Food"],["Salt", "Աղ", "Food"],
+["Honey", "Մեղր", "Food"],["Cheese", "Պանիր", "Food"],["Egg", "Հաւկիթ", "Food"],["Fig", "Թուզ", "Food"],["Walnut", "Ընկոյզ", "Food"],
+["Pepper", "Պղպեղ", "Food"],["Onion", "Սոխ", "Food"],["Grape", "Խաղող", "Food"],["Watermelon", "Ձմերուկ", "Food"],["Coffee", "Սուրճ", "Food"],
+["Tea", "Թէյ", "Food"],["Milk", "Կաթ", "Food"],["Dough", "Խմոր", "Food"],["Barbecue", "Խորոված", "Food"],["Tent", "Վրան", "Scouting"],
+["Compass", "Կողմնացոյց", "Scouting"],["Rope", "Չուան", "Scouting"],["Knot", "Հանգոյց", "Scouting"],["Whistle", "Սուլիչ", "Scouting"],["Campfire", "Խարոյկ", "Scouting"],
+["Hike", "Արշաւ", "Scouting"],["Scoutmaster", "Խմբապետ", "Scouting"],["Oath", "Երդում", "Scouting"],["Track", "Հետք", "Scouting"],["Backpack", "Ուսապարկ", "Scouting"],
+["Uniform", "Տարազ", "Scouting"],["Flag", "Դրօշ", "Scouting"],["Army", "Բանակ", "Scouting"],["Group", "Խումբ", "Scouting"],["Map", "Քարտէզ", "Scouting"],
+["Spark", "Կայծ", "Scouting"],["Ash", "Մոխիր", "Scouting"],["Source", "Աղբիւր", "Nature"],["Spring", "Գարուն", "Nature"],["Peak", "Գագաթ", "Nature"],
+["Volcano", "Հրաբուխ", "Nature"],["Cave", "Քարայր", "Nature"],["Waterfall", "Ջրվէժ", "Nature"],["Lake", "Լիճ", "Nature"],["Island", "Կղզի", "Nature"],
+["Desert", "Անապատ", "Nature"],["Sea", "Ծով", "Nature"],["River", "Գետ", "Nature"],["Mountain", "Լեռ", "Nature"],["Root", "Արմատ", "Nature"],
+["Branch", "Ճիւղ", "Nature"],["Leaf", "Տերեւ", "Nature"],["Tree", "Ծառ", "Nature"],["Rainbow", "Ծիածան", "Nature"],["Cloud", "Ամպ", "Nature"],
+["Lightning", "Կայծակ", "Nature"],["Storm", "Փոթորիկ", "Nature"],["Fog", "Մշուշ", "Nature"],["Hail", "Կարկուտ", "Nature"],["Snow", "Ձիւն", "Nature"],
+["Ice", "Սառոյց", "Nature"],["Fire", "Կրակ", "Nature"],["Smoke", "Ծուխ", "Nature"],["Shadow", "Շուք", "Nature"],["Light", "Լոյս", "Nature"],
+["Moon", "Լուսին", "Nature"],["Sun", "Արեւ", "Nature"],["Star", "Աստղ", "Nature"],["Planet", "Մոլորակ", "Nature"],["Ray", "Ճառագայթ", "Nature"],
+["Night", "Գիշեր", "Nature"],["Dream", "Երազ", "Nature"],["Giant", "Հսկայ", "Nature"],["Gold", "Ոսկի", "Nature"],["Silver", "Արծաթ", "Nature"],
+["Iron", "Երկաթ", "Nature"],["Key", "Բանալի", "Objects"],["Door", "Դուռ", "Objects"],["Window", "Պատուհան", "Objects"],["Mirror", "Հայելի", "Objects"],
+["Clock", "Ժամացոյց", "Objects"],["Glasses", "Ակնոց", "Objects"],["Hat", "Գլխարկ", "Objects"],["Belt", "Գօտի", "Objects"],["Ring", "Մատանի", "Objects"],
+["Chain", "Շղթայ", "Objects"],["Money", "Դրամ", "Objects"],["Ticket", "Տոմս", "Objects"],["Newspaper", "Թերթ", "Objects"],["Book", "Գիրք", "Objects"],
+["Mail", "Նամակ", "Objects"],["Net", "Ցանց", "Objects"],["Button", "Կոճակ", "Objects"],["Needle", "Ասեղ", "Objects"],["Thread", "Թել", "Objects"],
+["Hammer", "Մուրճ", "Objects"],["Saw", "Սղոց", "Objects"],["Match", "Լուցկի", "Objects"],["Fork", "Պատառաքաղ", "Objects"],["Plate", "Ափսէ", "Objects"],
+["Bottle", "Շիշ", "Objects"],["Wheel", "Անիւ", "Objects"],["Sail", "Առագաստ", "Objects"],["Anchor", "Խարիսխ", "Objects"],["Lighthouse", "Փարոս", "Objects"],
+["Bridge", "Կամուրջ", "Objects"],["Ladder", "Սանդուխ", "Objects"],["Sled", "Սահնակ", "Objects"],["Bicycle", "Հեծանիւ", "Objects"],["Ship", "Նաւ", "Objects"],
+["Phone", "Հեռաձայն", "Objects"],["Computer", "Համակարգիչ", "Objects"],["Rocket", "Հրթիռ", "Objects"],["Arch", "Կամար", "Places"],["Pillar", "Սիւն", "Places"],
+["Station", "Կայան", "Places"],["Market", "Շուկայ", "Places"],["Bank", "Դրամատուն", "Places"],["School", "Դպրոց", "Places"],["Museum", "Թանգարան", "Places"],
+["Hospital", "Հիւանդանոց", "Places"],["Point", "Կէտ", "Abstract"],["Corner", "Անկիւն", "Abstract"],["Circle", "Շրջան", "Abstract"],["Line", "Գիծ", "Abstract"],
+["Number", "Թիւ", "Abstract"],["Bill", "Հաշիւ", "Abstract"],["History", "Պատմութիւն", "Abstract"],["Link", "Կապ", "Abstract"],["Plan", "Ծրագիր", "Abstract"],
+["Password", "Գաղտնաբառ", "Abstract"],["Secret", "Գաղտնիք", "Abstract"],["Lesson", "Դաս", "Abstract"],["Exam", "Քննութիւն", "Abstract"],["Spy", "Լրտես", "People"],
+["Thief", "Գող", "People"],["Judge", "Դատաւոր", "People"],["Doctor", "Բժիշկ", "People"],["Master", "Վարպետ", "People"],["Pirate", "Ծովահէն", "People"],
+["Gyumri", "Գիւմրի", "Armenia"],["Vanadzor", "Վանաձոր", "Armenia"],["Etchmiadzin", "Էջմիածին", "Armenia"],["Dilijan", "Դիլիջան", "Armenia"],["Jermuk", "Ջերմուկ", "Armenia"],
+["Goris", "Գորիս", "Armenia"],["Kapan", "Կապան", "Armenia"],["Garni", "Գառնի", "Armenia"],["Geghard", "Գեղարդ", "Armenia"],["Khor Virap", "Խոր Վիրապ", "Armenia"],
+["Tatev", "Տաթեւ", "Armenia"],["Noravank", "Նորավանք", "Armenia"],["Tsaghkadzor", "Ծաղկաձոր", "Armenia"],["Hrazdan", "Հրազդան", "Armenia"],["Syunik", "Սիւնիք", "Armenia"],
+["Shirak", "Շիրակ", "Armenia"],["Lori", "Լոռի", "Armenia"],["Sardarapat", "Սարդարապատ", "Armenia"],["Ara", "Արա", "Armenia"],["Araks", "Արաքս", "Armenia"],
+["Van", "Վան", "Historic Armenia"],["Ani", "Անի", "Historic Armenia"],["Kars", "Կարս", "Historic Armenia"],["Karin", "Կարին", "Historic Armenia"],["Mush", "Մուշ", "Historic Armenia"],
+["Sasun", "Սասուն", "Historic Armenia"],["Baghesh", "Բաղէշ", "Historic Armenia"],["Kharpert", "Խարբերդ", "Historic Armenia"],["Tigranakert", "Տիգրանակերտ", "Historic Armenia"],["Akhtamar", "Աղթամար", "Historic Armenia"],
+["Cilicia", "Կիլիկիա", "Historic Armenia"],["Sis", "Սիս", "Historic Armenia"],["Adana", "Ատանա", "Historic Armenia"],["Marash", "Մարաշ", "Historic Armenia"],["Aintab", "Այնթապ", "Historic Armenia"],
+["Zeytun", "Զէյթուն", "Historic Armenia"],["Musa Dagh", "Մուսա Լեռ", "Historic Armenia"],["Sipan", "Սիփան", "Historic Armenia"],["Nemrut", "Նեմրութ", "Historic Armenia"],["Euphrates", "Եփրատ", "Historic Armenia"],
+["Tigris", "Տիգրիս", "Historic Armenia"],["Artsakh", "Արցախ", "Artsakh"],["Stepanakert", "Ստեփանակերտ", "Artsakh"],["Shushi", "Շուշի", "Artsakh"],["Gandzasar", "Գանձասար", "Artsakh"],
+["Dadivank", "Դադիվանք", "Artsakh"],["Amaras", "Ամարաս", "Artsakh"],["Martakert", "Մարտակերտ", "Artsakh"],["Hadrut", "Հադրութ", "Artsakh"],["Mrav", "Մռաւ", "Artsakh"],
+["Tatik-Papik", "Տատիկ-Պապիկ", "Artsakh"],["Hayk", "Հայկ", "Figures"],["Shamiram", "Շամիրամ", "Figures"],["Tigran the Great", "Տիգրան Մեծ", "Figures"],["Artashes", "Արտաշէս", "Figures"],
+["Trdat", "Տրդատ", "Figures"],["Levon", "Լեւոն", "Figures"],["Vartan", "Վարդան", "Figures"],["Avarayr", "Աւարայր", "Figures"],["Illuminator", "Լուսաւորիչ", "Figures"],
+["Mashtots", "Մաշտոց", "Figures"],["Khorenatsi", "Խորենացի", "Figures"],["Narekatsi", "Նարեկացի", "Figures"],["Shnorhali", "Շնորհալի", "Figures"],["Khrimian Hayrik", "Խրիմեան Հայրիկ", "Figures"],
+["David of Sasun", "Սասունցի Դաւիթ", "Figures"],["Andranik", "Անդրանիկ", "Figures"],["Nzhdeh", "Նժդեհ", "Figures"],["Aram Manukian", "Արամ Մանուկեան", "Figures"],["Tehlirian", "Թեհլիրեան", "Figures"],
+["Monte", "Մոնթէ", "Figures"],["Komitas", "Կոմիտաս", "Figures"],["Tumanyan", "Թումանեան", "Figures"],["Charents", "Չարենց", "Figures"],["Sevak", "Սեւակ", "Figures"],
+["Siamanto", "Սիամանթօ", "Figures"],["Aivazovsky", "Այվազովսկի", "Figures"],["Saryan", "Սարեան", "Figures"],["Aznavour", "Ազնաւուր", "Figures"],["Saroyan", "Սարոյեան", "Figures"],
+["Hagopian", "Յակոբեան", "Figures"],["Krissian", "Քրիսեան", "Figures"]
 ];
 /* pairs that never share a board: one clue would hit both equally */
 const APART = [["Ararat","Masis"],["Olive","Olive Tree"],["Bell","Bell Tower"],["Sasun","David of Sasun"],["Ship","Boat"],["Letter","Mail"]];
@@ -2961,6 +3069,7 @@ const T = {
    operation:"ԳՈՐԾՈՂՈՒԹԻՒՆ",lobbyQR:"Լրտեսապետներ՝ սքանեցէք QR կոդը ձեր հեռաձայնով։ Կամ բացէք այս էջը, ընտրեցէք «Լրտեսապետի բանալին» եւ գրեցէք ծածկագիրը։",lobbyInstr:"Լրտեսապետներ՝ բացէք այս էջը հեռաձայնով, ընտրեցէք «Լրտեսապետի բանալին» եւ գրեցէք այս ծածկագիրը։",
    spies:n=>n===0?"Լրտեսապետ դեռ միացած չէ":`${n} լրտեսապետ միացած է`,moved:c=>`Գլխաւոր պաստառը նոր խաղ սկսաւ (${c})։ Անցնիլ →`,join:c=>`Միանալ ${c} խաղին`,
    starts:(t,o)=>`${t}ը կը սկսի՝ 9 գործակալով։ ${o}ը ունի 8։`,start:"Սկսիլ",resume:"Շարունակել",newCode:"Նոր ծածկագիր",backTitle:"Գլխաւոր էջ",
+   hard:"Դժուար խաղ",hardHint:"Թեմատիկ տախտակ · առանց յաւելեալ գուշակութեան · 90 վրկ. հերթ",hardU:"ԴԺՈՒԱՐ",timeUp:"Ժամանակը լրացաւ",
    red:"Կարմիր",blue:"Կապոյտ",left:"մնացած գործակալ",turn:t=>`${t}ին հերթը`,clue:"Յուշում",endTurn:"Հերթը փոխանցել",undo:"Ետ առնել",
    newGame:"Նոր խաղ",sure:"Վստա՞հ ես",showClue:"Ցուցադրել",cancel:"Չեղարկել",cluePh:"Բառը",
    wins:t=>`${t}ը յաղթեց`,assassinSub:t=>`${t}ը մարդասպանին դպաւ։`,foundSub:"Բոլոր գործակալները գտնուեցան։",seeBoard:"Տախտակը տեսնել",
@@ -2984,6 +3093,7 @@ const T = {
    operation:"OPERATION",lobbyQR:"Spymasters: scan the QR code with your phone. Or open this page, choose Spymaster key, and enter the number.",lobbyInstr:"Spymasters: open this page on your phone, choose Spymaster key, and enter this code.",
    spies:n=>n===0?"No spymaster connected yet":n===1?"1 spymaster connected":`${n} spymasters connected`,moved:c=>`The main screen started a new game (${c}). Switch →`,join:c=>`Join game ${c}`,
    starts:(t,o)=>`${t} goes first with 9 agents. ${o} has 8.`,start:"Start",resume:"Continue",newCode:"New code",backTitle:"Title screen",
+   hard:"Hard mode",hardHint:"Themed board · no bonus guess · 90-second turns",hardU:"HARD",timeUp:"Time's up",
    red:"Red",blue:"Blue",left:"agents left",turn:t=>`${t}'s turn`,clue:"Clue",endTurn:"End turn",undo:"Undo",
    newGame:"New game",sure:"Sure?",showClue:"Show",cancel:"Cancel",cluePh:"Word",
    wins:t=>`${t} wins`,assassinSub:t=>`${t} touched the assassin.`,foundSub:"All agents found.",seeBoard:"See the board",
@@ -3041,16 +3151,27 @@ document.addEventListener('keydown', () => Snd.init(), true);
 /* ================= GAME STATE ================= */
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function shuffle(arr,rng){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+/* a code that divides by 7 is a hard-mode game, so a phone that only knows the number deals the same board */
+const isHard = code => parseInt(code,10) % 7 === 0;
 function deal(code){
   const rng = mulberry32((parseInt(code,10)*2654435761 % 4294967296) + 17);
   const partner = {}; APART.forEach(([x,y]) => { partner[x] = y; partner[y] = x; });
   const picks = [], taken = new Set();
-  for(const i of shuffle(WORDS.map((_,i)=>i), rng)){
+  let order = shuffle(WORDS.map((_,i)=>i), rng);
+  if(isHard(code)){
+    // themed board: most cards come from three categories, so clues collide
+    const cats = [...new Set(WORDS.map(w => w[2]))].filter(c => WORDS.filter(w => w[2] === c).length >= 8);
+    const three = shuffle(cats, rng).slice(0, 3);
+    const inTheme = order.filter(i => three.includes(WORDS[i][2])).slice(0, 18);
+    order = [...inTheme, ...order.filter(i => !inTheme.includes(i))];
+  }
+  for(const i of order){
     const en = WORDS[i][0];
     if(partner[en] && taken.has(partner[en])) continue;
     picks.push(i); taken.add(en);
     if(picks.length === 25) break;
   }
+  if(isHard(code)){ const mixed = shuffle(picks, rng); picks.length = 0; picks.push(...mixed); }
   const first = rng() < .5 ? 'r' : 'b', second = first === 'r' ? 'b' : 'r';
   const key = shuffle([...Array(9).fill(first), ...Array(8).fill(second), ...Array(7).fill('n'), 'a'], rng);
   return { words: picks, key, first };
@@ -3065,8 +3186,10 @@ function load(code){
 function save(){ try{ localStorage.setItem('ctz-g-'+G.code, JSON.stringify({rev:G.rev, turn:G.turn, clue:G.clue, hist:G.hist, over:G.over})); }catch(e){} }
 const left = t => G.key.filter((k,i) => k === t && !G.rev[i]).length;
 const other = t => t === 'r' ? 'b' : 'r';
-const tname = t => t === 'r' ? L().red : L().blue;
-const newCode = () => { let c; do{ c = String(1000 + Math.floor(Math.random()*9000)); }while(c === G.code); return c; };
+let names = { r:'', b:'' }, hardPref = false;
+try{ const n = JSON.parse(localStorage.getItem('ctz-names') || 'null'); if(n) names = { r:n.r || '', b:n.b || '' }; hardPref = localStorage.getItem('ctz-hard') === '1'; }catch(e){}
+const tname = t => (names[t] || '').trim() || (t === 'r' ? L().red : L().blue);
+const newCode = () => { let c; do{ c = 1000 + Math.floor(Math.random()*9000); }while(String(c) === G.code || (c % 7 === 0) !== hardPref); return String(c); };
 const word = i => WORDS[G.words[i]][lang === 'hy' ? 1 : 0];
 
 /* ================= ROOM (lights up when this page runs on claude.ai) ================= */
@@ -3477,6 +3600,10 @@ function renderQR(){
 }
 function renderLobby(){
   $('lCode').textContent = G.code; renderQR(); countSpies();
+  $('nameR').placeholder = L().red; $('nameB').placeholder = L().blue;
+  if(document.activeElement !== $('nameR')) $('nameR').value = names.r;
+  if(document.activeElement !== $('nameB')) $('nameB').value = names.b;
+  $('hardSw').setAttribute('aria-checked', isHard(G.code));
   const f = G.first, o = other(f);
   $('lStarts').innerHTML = `<span class="chip ${f==='r'?'red':'blue'}"></span><span></span>`;
   $('lStarts').lastChild.textContent = L().starts(tname(f), tname(o));
@@ -3487,6 +3614,17 @@ function renderLobby(){
 $('lStart').onclick = () => show('game');
 $('lNew').onclick = () => { try{ localStorage.removeItem('ctz-g-'+G.code); }catch(e){} load(newCode()); renderLobby(); setHash(); Snd.stamp(); };
 $('lHome').onclick = () => show('title');
+['r','b'].forEach(t => $(t === 'r' ? 'nameR' : 'nameB').addEventListener('input', e => {
+  names[t] = e.target.value; try{ localStorage.setItem('ctz-names', JSON.stringify(names)); }catch(err){}
+  const f = G.first; $('lStarts').lastChild.textContent = L().starts(tname(f), tname(other(f)));
+}));
+function toggleHard(){
+  hardPref = !isHard(G.code); try{ localStorage.setItem('ctz-hard', hardPref ? '1' : '0'); }catch(e){}
+  try{ localStorage.removeItem('ctz-g-'+G.code); }catch(e){}
+  load(newCode()); renderLobby(); setHash(); Snd.stamp();
+}
+$('hardSw').onclick = toggleHard;
+$('hardSw').onkeydown = e => { if(e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); toggleHard(); } };
 
 /* ================= BOARD ================= */
 const board = $('board');
@@ -3498,9 +3636,12 @@ function buildBoard(){
     b.addEventListener('click', () => pick(i));
     board.appendChild(b);
   }
-  $('gCode').textContent = G.code;
+  $('gCode').innerHTML = ''; $('gCode').textContent = G.code;
+  if(isHard(G.code)){ const h = document.createElement('span'); h.className = 'hardtag'; h.textContent = L().hardU; $('gCode').appendChild(h); }
+  peekAll = false; document.body.classList.remove('docked');
   renderGame(true);
   if(G.over) setTimeout(openEnd, 300);
+  else { startTimer(); if(!G.rev.some(Boolean)) setTimeout(() => sweep(G.turn), 650); }
 }
 /* names longer than 9 letters with a space break onto two balanced lines */
 function twoLines(w){
@@ -3520,13 +3661,15 @@ function cardText(i){
   el.querySelector('.w').textContent = w; el.querySelector('.w2').textContent = w;
   fitLen(el, w);
   el.querySelector('use').setAttribute('href', G.key[i] === 'a' ? '#assassin' : G.key[i] === 'n' ? '#person' : '#agent');
-  el.className = 'card ' + (lang === 'hy' ? 'hy ' : '') + (r || peekAll ? 'rev t-' + G.key[i] : '') + (G.over || r ? ' locked' : '');
+  el.className = 'card ' + (lang === 'hy' ? 'hy ' : '') + (r || peekAll ? 'rev t-' + G.key[i] : '') + (G.over || r ? ' locked' : '') + (peekAll && !r ? ' ghost' : '');
   fitLen(el, w);
   el.setAttribute('aria-label', w);
 }
 function renderGame(all){
   if(all) for(let i=0;i<25;i++) cardText(i);
   setN('nR', left('r')); setN('nB', left('b'));
+  $('nmR').textContent = tname('r'); $('nmB').textContent = tname('b');
+  $('timer').hidden = !isHard(G.code) || !!G.over;
   $('tR').classList.toggle('on', !G.over && G.turn === 'r'); $('tB').classList.toggle('on', !G.over && G.turn === 'b');
   const turn = $('turn');
   if(G.over){ turn.className = 'turn over'; turn.textContent = L().wins(tname(G.over.w)); }
@@ -3536,7 +3679,7 @@ function renderGame(all){
   if(c){
     cs.className = 'clue ' + (c.t === 'r' ? 'red' : 'blue') + (/[Ա-֏]/.test(c.w) ? ' hy' : '');
     $('clueW').textContent = c.w; $('clueN').textContent = c.n === 0 ? '∞' : c.n;
-    $('pips').innerHTML = c.n === 0 ? '' : Array.from({length:c.n+1}, (_,k) => `<i class="${k < c.left ? 'full' : ''}"></i>`).join('');
+    $('pips').innerHTML = c.n === 0 ? '' : Array.from({length:c.n + (isHard(G.code) ? 0 : 1)}, (_,k) => `<i class="${k < c.left ? 'full' : ''}"></i>`).join('');
   }
   $('aUndo').disabled = !G.hist.length;
   $('aEnd').disabled = !!G.over; $('aClue').disabled = !!G.over;
@@ -3551,9 +3694,12 @@ function pick(i){
   const k = G.key[i], el = board.children[i];
   Snd.flip();
   if(k === 'a'){
-    G.over = { w:other(G.turn), assassin:true };
-    setTimeout(() => { $('flash').classList.remove('go'); void $('flash').offsetWidth; $('flash').classList.add('go'); board.classList.remove('shake'); void board.offsetWidth; board.classList.add('shake'); }, 350);
-    Snd.boom();
+    G.over = { w:other(G.turn), assassin:true }; stopTimer();
+    setTimeout(() => {
+      const a = $('amoment'); $('amT').textContent = L().lg.a.toUpperCase();
+      a.classList.remove('go'); void a.offsetWidth; a.classList.add('go'); Snd.boom();
+    }, 420);
+    setTimeout(() => { $('flash').classList.remove('go'); void $('flash').offsetWidth; $('flash').classList.add('go'); board.classList.remove('shake'); void board.offsetWidth; board.classList.add('shake'); }, 2350);
   } else if(left('r') === 0 || left('b') === 0){
     G.over = { w: left('r') === 0 ? 'r' : 'b' }; Snd.good();
   } else if(k === G.turn){
@@ -3562,16 +3708,45 @@ function pick(i){
   } else {
     k === 'n' ? Snd.meh() : Snd.other();
     G.turn = other(G.turn); G.clue = null; swapAnim();
+    setTimeout(() => { if(!G.over) sweep(G.turn); }, 1150); startTimer();
   }
+  if(G.over) stopTimer();
   save(); cardText(i); renderGame(false); broadcast();
-  if(G.over) setTimeout(openEnd, G.over.assassin ? 1500 : 1100);
+  el.classList.add('just'); setTimeout(() => el.classList.remove('just'), 1900);
+  if(G.over) setTimeout(openEnd, G.over.assassin ? 3000 : 1100);
 }
 function swapAnim(){ const t = $('turn'); t.classList.remove('swap'); void t.offsetWidth; t.classList.add('swap'); }
-function passTurn(){ if(G.over) return; G.turn = other(G.turn); G.clue = null; swapAnim(); Snd.swish(); save(); renderGame(false); broadcast(); }
+function passTurn(){ if(G.over) return; G.turn = other(G.turn); G.clue = null; swapAnim(); Snd.swish(); save(); renderGame(false); broadcast(); sweep(G.turn); startTimer(); }
+/* the whole room should know whose turn it is */
+function sweep(t){
+  if(reduce || cur !== 'game') return;
+  const s = $('sweep'); s.className = 'sweep ' + (t === 'r' ? 'red' : 'blue');
+  $('sweepT').textContent = L().turn(tname(t)).toUpperCase();
+  void s.offsetWidth; s.classList.add('go'); Snd.swish();
+}
+/* hard mode: 90 seconds a turn; time out passes the turn */
+const TURN = 90;
+let tLeft = TURN, tRun = false, tTick = null;
+function startTimer(){ clearInterval(tTick); tLeft = TURN; tRun = isHard(G.code) && !G.over; drawTimer(); if(tRun) tTick = setInterval(tickTimer, 1000); }
+function stopTimer(){ clearInterval(tTick); tRun = false; drawTimer(); }
+function tickTimer(){
+  if(!tRun || cur !== 'game') return;
+  tLeft--; if(tLeft <= 10 && tLeft > 0) Snd.tick();
+  if(tLeft <= 0){ tRun = false; clearInterval(tTick); Snd.other(); passTurn(); return; }
+  drawTimer();
+}
+function drawTimer(){
+  const el = $('timer'); el.className = 'timer ' + (G.turn === 'r' ? 'red' : 'blue') + (tLeft <= 10 ? ' low' : '') + (!tRun && !G.over ? ' paused' : '');
+  $('tSec').textContent = Math.floor(tLeft/60) + ':' + String(tLeft%60).padStart(2,'0');
+  $('tBar').style.transform = `scaleX(${Math.max(0, tLeft/TURN)})`;
+}
+$('timer').onclick = () => { if(G.over || !isHard(G.code)) return; tRun = !tRun; clearInterval(tTick); if(tRun) tTick = setInterval(tickTimer, 1000); drawTimer(); };
 $('aEnd').onclick = passTurn;
 $('aUndo').onclick = () => {
   const h = G.hist.pop(); if(!h) return;
+  const wasOver = !!G.over;
   G.rev[h.i] = false; G.turn = h.turn; G.clue = h.clue; G.over = null; closeEnd();
+  if(wasOver){ peekAll = false; document.body.classList.remove('docked'); stopConfetti(); renderGame(true); startTimer(); }
   save(); cardText(h.i); renderGame(false); broadcast();
 };
 let sureT = null;
@@ -3581,7 +3756,7 @@ $('aNew').onclick = () => {
   delete b.dataset.sure; b.textContent = L().newGame; b.classList.remove('main');
   freshGame();
 };
-function freshGame(){ try{ localStorage.removeItem('ctz-g-'+G.code); }catch(e){} load(newCode()); peekAll = false; show('lobby'); }
+function freshGame(){ try{ localStorage.removeItem('ctz-g-'+G.code); }catch(e){} hardPref = isHard(G.code); load(newCode()); peekAll = false; document.body.classList.remove('docked'); stopConfetti(); stopTimer(); show('lobby'); }
 $('gHome').onclick = () => show('title');
 
 /* clue */
@@ -3594,7 +3769,7 @@ $('clueForm').addEventListener('submit', e => {
   e.preventDefault();
   const w = $('clueIn').value.trim().split(/\s+/)[0] || '';
   $('clueForm').hidden = true;
-  if(w){ G.clue = { w, n:cNum, left:cNum+1, t:G.turn }; save(); Snd.stamp(); }
+  if(w){ G.clue = { w, n:cNum, left:cNum + (isHard(G.code) ? 0 : 1), t:G.turn }; save(); Snd.stamp(); }
   renderGame(false);
   if(w){ const cs = $('clueShow'); cs.classList.remove('in'); void cs.offsetWidth; cs.classList.add('in'); }
 });
@@ -3608,17 +3783,40 @@ function renderEnd(){
   $('endH').textContent = L().wins(tname(w));
   $('endSub').textContent = G.over.assassin ? L().assassinSub(tname(other(w))) : L().foundSub;
 }
+let dockT = null;
 function openEnd(){
   if(!G.over || cur !== 'game') return;
-  const e = $('end'); e.hidden = false;
+  const e = $('end'); e.hidden = false; e.classList.remove('dock'); clearTimeout(dockT);
   $('lineup').innerHTML = Array.from({length:7}, (_,i) => `<svg viewBox="-22 -84 44 84" style="--i:${i};height:${i===3?100:70+((i*13)%20)}%"><use href="#${i===3?'agent':'person'}" x="-22" y="-84" width="44" height="84"/></svg>`).join('');
   renderEnd(); e.classList.remove('open'); void e.offsetWidth;
   requestAnimationFrame(() => e.classList.add('open'));
-  if(!G.over.assassin) Snd.win();
+  Snd.win(); confetti(G.over.w);
+  dockT = setTimeout(dock, 3600);
 }
-function closeEnd(instant){ const e = $('end'); if(e.hidden) return; if(instant){ e.hidden = true; e.classList.remove('open'); return; } e.classList.remove('open'); setTimeout(() => { e.hidden = true; }, 700); }
+function dock(){
+  const e = $('end'); if(e.hidden || !G.over) return;
+  clearTimeout(dockT); e.classList.add('dock');
+  peekAll = true; document.body.classList.add('docked'); renderGame(true);
+}
+let confT = null;
+function confetti(t){
+  if(reduce) return;
+  const cv = $('confetti'), cx = cv.getContext('2d'), W = cv.width = innerWidth, H = cv.height = innerHeight;
+  const cols = [t === 'r' ? '#E1251B' : '#1D4FD6', '#ffffff', '#151515', '#D5C9AE', t === 'r' ? '#ff7a6e' : '#7ea2ff'];
+  const P = Array.from({length:190}, () => ({ x:Math.random()*W, y:-20 - Math.random()*H*.6, vx:(Math.random()-.5)*3, vy:2 + Math.random()*4, r:Math.random()*6.28, vr:(Math.random()-.5)*.3, w:8 + Math.random()*10, h:5 + Math.random()*7, c:cols[(Math.random()*cols.length)|0] }));
+  const t0 = performance.now(); cancelAnimationFrame(confT);
+  (function f(now){
+    cx.clearRect(0,0,W,H);
+    const fade = Math.min(1, Math.max(0, (6000 - (now - t0)) / 1200));
+    P.forEach(p => { p.vy += .05; p.vx *= .995; p.x += p.vx + Math.sin((now + p.r*500)/400)*.6; p.y += p.vy; p.r += p.vr;
+      cx.save(); cx.globalAlpha = fade; cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c; cx.fillRect(-p.w/2, -p.h/2, p.w, p.h * Math.abs(Math.cos(p.r*2))); cx.restore(); });
+    if(now - t0 < 6000) confT = requestAnimationFrame(f); else cx.clearRect(0,0,W,H);
+  })(t0);
+}
+function stopConfetti(){ cancelAnimationFrame(confT); const cv = $('confetti'); cv.getContext('2d').clearRect(0,0,cv.width,cv.height); }
+function closeEnd(instant){ const e = $('end'); clearTimeout(dockT); e.classList.remove('dock'); if(e.hidden) return; if(instant){ e.hidden = true; e.classList.remove('open'); return; } e.classList.remove('open'); setTimeout(() => { e.hidden = true; }, 700); }
 $('endNew').onclick = () => freshGame();
-$('endBoard').onclick = () => { peekAll = true; closeEnd(); renderGame(true); };
+$('endBoard').onclick = dock;
 
 /* ================= SPYMASTER ================= */
 let spyCode = null, spyOpen = false, spyMarks = Array(25).fill(false);
@@ -3668,6 +3866,60 @@ document.addEventListener('keydown', e => { if((e.key === 'f' || e.key === 'F') 
 $('gateBack').onclick = $('kBack').onclick = () => { spyCode = null; spyOpen = false; renderSpy(); setHash(); spyPresence(); };
 $('spyHome').onclick = () => { G.code = null; show('title'); };
 setInterval(() => { if(cur === 'spy' && spyCode && spyOpen) renderKey(); }, 3000);
+
+/* ================= MAGNIFYING GLASS ================= */
+/* The cursor is a lens: it carries a live copy of the screen under it, drawn larger. Mouse only; phones keep their finger. */
+const Mag = (() => {
+  const fine = matchMedia('(pointer: fine)').matches;
+  const wrap = $('lensw'), inner = $('lensIn'), ZOOM = 2.1;
+  let on = fine, x = -999, y = -999, inside = false, last = 0, raf = 0;
+  try{ const v = localStorage.getItem('ctz-mag'); if(v) on = fine && v === '1'; }catch(e){}
+  const R = () => Math.round(Math.min(130, Math.max(80, innerWidth * .075)));
+  function snapshot(){
+    const parts = [];
+    const scr = document.querySelector('.screen:not([hidden])'); if(scr) parts.push(scr);
+    if(!$('end').hidden) parts.push($('end'));
+    ['sweep','amoment'].forEach(id => { if($(id).classList.contains('go')) parts.push($(id)); });
+    parts.push($('ctl'));
+    inner.replaceChildren(...parts.map(el => {
+      const c = el.cloneNode(true);
+      c.querySelectorAll('input').forEach((n,i) => n.setAttribute('value', el.querySelectorAll('input')[i]?.value || ''));
+      c.setAttribute('aria-hidden', 'true'); c.inert = true;
+      return c;
+    }));
+    inner.style.width = innerWidth + 'px'; inner.style.height = innerHeight + 'px';
+    last = performance.now();
+  }
+  function place(){
+    raf = 0;
+    const r = R(); wrap.style.setProperty('--R', r + 'px');
+    wrap.style.transform = `translate(${x}px,${y}px)`;
+    inner.style.transform = `translate(${-x*ZOOM + r - 7}px,${-y*ZOOM + r - 7}px) scale(${ZOOM})`;
+    if(performance.now() - last > 220) snapshot();
+  }
+  function apply(){
+    document.documentElement.classList.toggle('mag', on && inside);
+    document.documentElement.classList.toggle('magicon', fine && !on);
+    wrap.hidden = !(on && inside);
+    $('magBtn').classList.toggle('on', on); $('magBtn').hidden = !fine;
+    if(on && inside){ snapshot(); place(); }
+  }
+  addEventListener('pointermove', e => {
+    if(e.pointerType !== 'mouse') return;
+    x = e.clientX; y = e.clientY;
+    if(!inside){ inside = true; apply(); }
+    if(on && !raf) raf = requestAnimationFrame(place);
+  }, { passive:true });
+  document.addEventListener('mouseleave', () => { inside = false; apply(); });
+  addEventListener('blur', () => { inside = false; apply(); });
+  addEventListener('click', () => { if(on) setTimeout(snapshot, 60); }, true);
+  setInterval(() => { if(on && inside && !document.hidden) { snapshot(); place(); } }, 400);
+  function toggle(){ on = fine && !on; try{ localStorage.setItem('ctz-mag', on ? '1' : '0'); }catch(e){} apply(); }
+  $('magBtn').onclick = toggle;
+  document.addEventListener('keydown', e => { if((e.key === 'm' || e.key === 'M' || e.key === 'մ' || e.key === 'Մ') && !/INPUT|TEXTAREA/.test(e.target.tagName)) toggle(); });
+  apply();
+  return { snapshot };
+})();
 
 /* ================= BOOT ================= */
 applyText();
